@@ -16,3 +16,13 @@ final class Item {
         self.timestamp = timestamp
     }
 }
+
+@Model
+final class entry {
+    var date: Date
+    
+    init(date: Date) {
+        self.date = date
+    }
+    
+}
