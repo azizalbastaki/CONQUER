@@ -15,6 +15,7 @@
 		CE2CA2F62B4056B1003CAFD7 /* CONQUERTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2CA2F52B4056B1003CAFD7 /* CONQUERTests.swift */; };
 		CE2CA3002B4056B1003CAFD7 /* CONQUERUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2CA2FF2B4056B1003CAFD7 /* CONQUERUITests.swift */; };
 		CE2CA3022B4056B1003CAFD7 /* CONQUERUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2CA3012B4056B1003CAFD7 /* CONQUERUITestsLaunchTests.swift */; };
+		CE2CA30F2B4066B1003CAFD7 /* todaystodoview.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2CA30E2B4066B1003CAFD7 /* todaystodoview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		CE2CA2FB2B4056B1003CAFD7 /* CONQUERUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CONQUERUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE2CA2FF2B4056B1003CAFD7 /* CONQUERUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CONQUERUITests.swift; sourceTree = "<group>"; };
 		CE2CA3012B4056B1003CAFD7 /* CONQUERUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CONQUERUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		CE2CA30E2B4066B1003CAFD7 /* todaystodoview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = todaystodoview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				CE2CA2E82B4056B0003CAFD7 /* CONQUER.entitlements */,
 				CE2CA2EC2B4056B0003CAFD7 /* Info.plist */,
 				CE2CA2E92B4056B0003CAFD7 /* Preview Content */,
+				CE2CA30E2B4066B1003CAFD7 /* todaystodoview.swift */,
 			);
 			path = CONQUER;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE2CA30F2B4066B1003CAFD7 /* todaystodoview.swift in Sources */,
 				CE2CA2E32B4056B0003CAFD7 /* ContentView.swift in Sources */,
 				CE2CA2E52B4056B0003CAFD7 /* Item.swift in Sources */,
 				CE2CA2E12B4056B0003CAFD7 /* CONQUERApp.swift in Sources */,

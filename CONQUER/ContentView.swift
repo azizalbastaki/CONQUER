@@ -14,7 +14,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            Text("Today's Tasks")
+            todaystodoview()
                 .tabItem { Label("Today's Tasks", systemImage: "dot.scope") }
             Text("Journal")
                 .tabItem { Label("Journal", systemImage: "book.fill") }
@@ -23,10 +23,11 @@ struct ContentView: View {
             Text("Settings")
                 .tabItem { Label("Settings", systemImage: "gear") }
         }
+        
+        
     }
+    
 }
-
-
 
 
 

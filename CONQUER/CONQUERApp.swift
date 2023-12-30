@@ -26,6 +26,7 @@ struct CONQUERApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+        //        .environment(\.font, Font.custom("Georgia-Bold", size: 14))
         }
         .modelContainer(sharedModelContainer)
     }
