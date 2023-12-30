@@ -13,8 +13,22 @@ struct todaystodoview: View {
             HStack {
                 Text("Today's Tasks")
                     .font(.title)
-                    .padding()
+                    .padding(.horizontal)
                     .bold()
+                
+                
+                Spacer()
+                
+                Button(action: dothing, label: {
+                    Text("+")
+                        .padding(.horizontal)
+                        .font(.system(size: 30))
+                    
+                })
+            }
+            HStack {
+                Text(getTodaysDate())
+                    .padding(.horizontal)
                 Spacer()
             }
             List {
@@ -36,18 +50,12 @@ struct todoRow: View {
             Text("DO THIS TING")
             Text("ROY")
                 .background(.red)
+                .foregroundStyle(.white)
                 .safeAreaPadding(.horizontal, 5)
             Text("30 minutes")
+                .foregroundStyle(.white)
                 .background(.purple)
                 .safeAreaPadding(.horizontal, 5)
-            
-        }
-        VStack {
-            List {
-                Text("fefe")
-                Text("JOE")
-            }.listStyle(.plain)
-                
             
         }
     }
@@ -55,6 +63,12 @@ struct todoRow: View {
 
 func dothing() {
     print("Hello")
+}
+
+func getTodaysDate() -> String {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .full
+    return formatter.string(from: .now)
 }
 #Preview {
     todaystodoview()
