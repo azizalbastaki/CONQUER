@@ -25,6 +25,7 @@ enum ItemType: Codable, Hashable{
     case dailyEntry
     case routines
     case projects
+    case taglist
 }
 
 struct journal: Codable, Hashable {

@@ -10,27 +10,34 @@ import SwiftUI
 struct todaystodoview: View {
     var body: some View {
         VStack {
-            HStack {
-                Text("Today's Tasks")
-                    .font(.title)
-                    .padding(.horizontal)
-                    .bold()
-                
-                
-                Spacer()
-                
-                Button(action: dothing, label: {
-                    Text("+")
+            
+            VStack {
+                HStack {
+                    Text("Today's Tasks")
+                        .font(.title)
                         .padding(.horizontal)
-                        .font(.system(size: 30))
+                        .bold()
                     
-                })
+                    
+                    Spacer()
+                    Button(action: dothing, label: {Image(systemName: "calendar")
+                            .padding(.horizontal)
+                    })
+                    Button(action: dothing, label: {
+                        Text("+")
+                            .padding(.trailing)
+                            .font(.system(size: 25))
+                        
+                    })
+                }
+                
+                HStack {
+                    Text(getTodaysDate())
+                        .padding(.horizontal)
+                    Spacer()
+                }
             }
-            HStack {
-                Text(getTodaysDate())
-                    .padding(.horizontal)
-                Spacer()
-            }
+        .padding(.horizontal)
             List {
                 todoRow()
                 todoRow()
