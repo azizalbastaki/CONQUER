@@ -11,7 +11,7 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query var items: [Item]
-    
+
     var body: some View {
         TabView {
             todaystodoview(ourModelContext: modelContext, entries: items, addFunction: self.addToDoTask, initializeConquer: self.initializeConquer, addEntry: self.addNewEntry)
@@ -110,6 +110,7 @@ struct ContentView: View {
         }
         
         modelContext.insert(newEntry)
+        
     }
     
     

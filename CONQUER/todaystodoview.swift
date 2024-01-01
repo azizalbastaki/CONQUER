@@ -23,78 +23,80 @@ struct todaystodoview: View {
     
     
     var body: some View {
-        VStack {
+        NavigationStack {
             VStack {
-                HStack {
-                    Text("Today's Tasks")
-                        .font(.title)
-                        .padding(.horizontal)
-                        .bold()
-                    
-                    Spacer()
-                    Button(action: dothing, label: {Image(systemName: "calendar")
+                VStack {
+                    HStack {
+                        Text("Today's Tasks")
+                            .font(.title)
                             .padding(.horizontal)
-                    })
-                    
-                    NavigationLink {
-                        Form {
-                            Section {
-                                TextField("Task Name", text: self.$taskTitle)
-                            }
-                            
-                            Section {
-                                TextField("Description of Task. For example, Why are you doing this Task? How will this help you achieve a long term goal?", text: self.$taskDescription)
-                                    .lineLimit(5, reservesSpace: true)
-                            }
-                            
-                            Section {
-                                TextField("In minutes, how long will this task take?", value: self.$taskDuration, formatter: NumberFormatter())
-                                    .keyboardType(.numberPad)
-                            }
-                            
-                            Section {
-                                DatePicker(selection: $date, in: Date.now..., displayedComponents: .date) {
-                                    Text("Task set for \(DateFormatter().string(from: date))")
+                            .bold()
+                        
+                        Spacer()
+                        Button(action: dothing, label: {Image(systemName: "calendar")
+                                .padding(.horizontal)
+                        })
+                        
+                        NavigationLink {
+                            Form {
+                                Section {
+                                    TextField("Task Name", text: self.$taskTitle)
                                 }
-                            
-                            }
-                            Section {
-                                TextField("Tag this Task", text: $taskTag)
-                            }
-                            
-                            Button(action: {
-                                self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag)
-                                self.taskTitle = ""
-                                self.taskDescription = ""
-                                self.taskDuration = 30
-                                self.date = Date.now
-                                self.taskTag = ""
-                            },
-                                   label: {
-                                Text("Add Task")
-                                    .padding(.trailing)
-                                    .font(.system(size: 25))
                                 
-                            })
+                                Section {
+                                    TextField("Description of Task. For example, Why are you doing this Task? How will this help you achieve a long term goal?", text: self.$taskDescription)
+                                        .lineLimit(5, reservesSpace: true)
+                                }
+                                
+                                Section {
+                                    TextField("In minutes, how long will this task take?", value: self.$taskDuration, formatter: NumberFormatter())
+                                        .keyboardType(.numberPad)
+                                }
+                                
+                                Section {
+                                    DatePicker(selection: $date, in: Date.now..., displayedComponents: .date) {
+                                        Text("Task set for \(DateFormatter().string(from: date))")
+                                    }
+                                    
+                                }
+                                Section {
+                                    TextField("Tag this Task", text: $taskTag)
+                                }
+                                
+                                Button(action: {
+                                    self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag)
+                                    self.taskTitle = ""
+                                    self.taskDescription = ""
+                                    self.taskDuration = 30
+                                    self.date = Date.now
+                                    self.taskTag = ""
+                                },
+                                       label: {
+                                    Text("Add Task")
+                                        .padding(.trailing)
+                                        .font(.system(size: 25))
+                                    
+                                })
+                            }
+                        } label: {
+                            Text("+")
+                                .padding(.trailing)
+                                .font(.system(size: 25))
                         }
-                    } label: {
-                        Text("+")
-                            .padding(.trailing)
-                            .font(.system(size: 25))
+                    }
+                    
+                    HStack {
+                        Text(getTodaysDate())
+                            .padding(.horizontal)
+                        Spacer()
                     }
                 }
-                
-                HStack {
-                    Text(getTodaysDate())
-                        .padding(.horizontal)
-                    Spacer()
-                }
-            }
-        .padding(.horizontal)
-            List {
-                ForEach(getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks) { entry in
-                    todoRow(taskTitle: entry.taskTitle, tagTitle: taskTag, duration: taskDuration)
-                    
+                .padding(.horizontal)
+                List {
+                    ForEach(getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks) { entry in
+                        todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration)
+                        
+                    }
                 }
             }
         }
@@ -114,7 +116,7 @@ struct todaystodoview: View {
             return searchForEntry(items: items, entryTimestamp: getTodaysDate())!
         }
     }
-
+    
     func searchForEntry(items: [Item], entryTimestamp: String) -> Item? {
         for item in items {
             if (item.timestamp == getTodaysDate()) {
@@ -123,8 +125,8 @@ struct todaystodoview: View {
         }
         return nil
     }
-
-
+    
+    
 }
 
 struct todoRow: View {
