@@ -33,7 +33,7 @@ struct todaystodoview: View {
                             .bold()
                         
                         Spacer()
-                        Button(action: dothing, label: {Image(systemName: "calendar")
+                        Button(action: deletething, label: {Image(systemName: "calendar")
                                 .padding(.horizontal)
                         })
                         
@@ -67,7 +67,7 @@ struct todaystodoview: View {
                                     self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag)
                                     self.taskTitle = ""
                                     self.taskDescription = ""
-                                    self.taskDuration = 30
+                                    self.taskDuration = 0
                                     self.date = Date.now
                                     self.taskTag = ""
                                 },
@@ -93,7 +93,7 @@ struct todaystodoview: View {
                 }
                 .padding(.horizontal)
                 List {
-                    ForEach(getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks) { entry in
+                    ForEach(getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks!) { entry in
                         todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration)
                         
                     }
@@ -126,7 +126,18 @@ struct todaystodoview: View {
         return nil
     }
     
-    
+    func deletething() {
+        do {
+            try ourModelContext.delete(model: Item.self)
+            initializeConquer()
+        } catch {
+            print("Could not delete.")
+        }
+    }
+
+}
+func dothing() {
+    print("Hello")
 }
 
 struct todoRow: View {
@@ -153,9 +164,6 @@ struct todoRow: View {
     }
 }
 
-func dothing() {
-    print("Hello")
-}
 
 func getTodaysDate() -> String {
     let formatter = DateFormatter()
