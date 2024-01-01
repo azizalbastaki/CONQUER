@@ -10,11 +10,11 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query var items: [Item]
     
     var body: some View {
         TabView {
-            todaystodoview()
+            todaystodoview(ourModelContext: modelContext, entries: items, addFunction: self.addToDoTask, initializeConquer: self.initializeConquer, addEntry: self.addNewEntry)
                 .tabItem { Label("Today's Tasks", systemImage: "dot.scope") }
             Text("Journal")
                 .tabItem { Label("Journal", systemImage: "book.fill") }
@@ -23,11 +23,102 @@ struct ContentView: View {
             Text("Settings")
                 .tabItem { Label("Settings", systemImage: "gear") }
         }
+        .onAppear(perform: {initializeConquer()})
         
         
     }
     
+    func getItems() -> [Item] {
+        return items
+    }
+    
+    func initializeConquer() {
+        print("Being Initialized!")
+        if (items.count == 0) {
+            let tobelist = Item(itemType: .tobelist)
+            let routinelist = Item(itemType: .routines)
+            let projectlist = Item(itemType: .projects)
+            let taglist = Item(itemType: .taglist)
+            modelContext.insert(tobelist)
+            modelContext.insert(routinelist)
+            modelContext.insert(projectlist)
+            modelContext.insert(taglist)
+            try? modelContext.save()
+        }
+    }
+    
+    func addToDoTask(taskTitle: String, dueBy: Date, minutes: Int, taskDescription: String, tagTitle: String) {
+        withAnimation {
+            let newToDo = ToDoTask(id: taskTitle+taskDescription, completed: false, deadline: dueBy, duration: minutes, taskTitle: taskTitle, taskDescription: taskDescription, tag: tagTitle, routineSetting: .none)
+            
+            let formatter = DateFormatter()
+            formatter.dateStyle = .full
+            let dueDateAsString = formatter.string(from: dueBy)
+            var entryExists = false
+            for entry in items {
+                if (entry.timestamp == dueDateAsString) {
+                    entryExists = true
+                    entry.tasks.append(newToDo)
+                }
+            }
+            
+            if (entryExists == false) {
+                if (items.count == 0) {
+                    self.initializeConquer()
+                }
+                addNewEntry(day: dueDateAsString)
+                items[-1].tasks.append(newToDo)
+            }
+            
+        }
+    }
+    
+    func addNewEntry(day: String) {
+        print("New Entry Being Added!")
+        let newEntry = Item(itemType: .dailyEntry)
+        newEntry.timestamp = day
+        let dayOfTheWeek = day.components(separatedBy: ",")[0]
+        if (dayOfTheWeek == items[0].timestamp) {
+            newEntry.journals.append(journal(journalTitle: "Reflect on your To-Be list", journalText: "*ADD TO-BEs HERE*"))
+        }
+        
+        var dayOfTheWeekEnum = RoutineSetting.daily
+        
+        switch dayOfTheWeek {
+        case "Monday":
+            dayOfTheWeekEnum = .monday
+        case "Tuesday":
+            dayOfTheWeekEnum = .tuesday
+        case "Wednesday":
+            dayOfTheWeekEnum = .wednesday
+        case "Thursday":
+            dayOfTheWeekEnum = .thursday
+        case "Friday":
+            dayOfTheWeekEnum = .friday
+        case "Saturday":
+            dayOfTheWeekEnum = .saturday
+        case "Sunday":
+            dayOfTheWeekEnum = .sunday
+        default:
+            print("How did we get here? :3")
+        }
+        
+        for routine in items[1].tasks {
+            if (routine.routineSetting == .daily || routine.routineSetting == dayOfTheWeekEnum) {
+                newEntry.tasks.append(routine)
+            }
+        }
+        
+        modelContext.insert(newEntry)
+    }
+    
+    
+    
 }
+
+
+
+// VIEWS
 
 
 

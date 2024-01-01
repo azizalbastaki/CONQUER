@@ -29,5 +29,6 @@ struct CONQUERApp: App {
         //        .environment(\.font, Font.custom("Georgia-Bold", size: 14))
         }
         .modelContainer(sharedModelContainer)
+
     }
 }

@@ -13,10 +13,13 @@ import SwiftUI
 final class Item {
     var timestamp: String
     var itemType: ItemType
-    var journals = [journal]()
+    var journals: [journal]
+    var tasks: [ToDoTask]
     init(itemType: ItemType) {
         self.itemType = itemType
         self.timestamp = getTodaysDate()
+        self.tasks = []
+        self.journals = []
     }
 }
 
@@ -33,43 +36,25 @@ struct journal: Codable, Hashable {
     var journalText: String
 }
 
-class SubTask {
+struct SubTask: Hashable, Codable {
+    var taskText: String
+    var completed: Bool
+    
+}
+
+struct ToDoTask: Hashable, Codable, Identifiable {
+    var id: String
     var completed: Bool
     var deadline: Date
-    //    var tag: String
-    //    var tagColor: Color
     var duration: Int
     var taskTitle: String
     var taskDescription: String
     
-    init(title: String, deadline : Date?, duration: Int?, description: String?) {
-        self.taskTitle = title
-        self.completed = false
-        self.deadline = Date(timeIntervalSinceNow: 3153600000)
-        self.duration = 1
-        self.taskDescription = ""
-        if (deadline != nil) {
-            self.deadline = deadline!
-        }
-        if (duration != nil) {
-            self.duration = duration!
-        }
-        if (description != nil) {
-            self.taskDescription = description!
-        }
-    }
+    var tag: String
+    //var subTasks: [SubTask]
+    var routineSetting: RoutineSetting
 }
 
-class ToDoTask: SubTask {
-    var tag: String
-    var tagColor: Color
-    var subTasks: [SubTask]
-    
-    init(title: String, deadline : Date?, duration: Int?, description: String?, tagTitle: String, color: Color) {
-        self.tag = tagTitle
-        self.tagColor = color
-        self.subTasks = []
-        super.init(title: title, deadline: deadline, duration: duration, description: description)
-        
-    }
+enum RoutineSetting: Hashable, Codable {
+    case daily, monday, tuesday, wednesday, thursday, friday, saturday, sunday, none
 }
