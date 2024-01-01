@@ -11,10 +11,10 @@ import SwiftUI
 
 @Model
 final class Item {
-    var timestamp: String
-    var itemType: ItemType
-    var journals: [journal]
-    var tasks: [ToDoTask]
+    var timestamp: String?
+    var itemType: ItemType?
+    var journals: [journal]?
+    var tasks: [ToDoTask]?
     init(itemType: ItemType) {
         self.itemType = itemType
         self.timestamp = getTodaysDate()

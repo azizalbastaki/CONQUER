@@ -58,7 +58,7 @@ struct ContentView: View {
             for entry in items {
                 if (entry.timestamp == dueDateAsString) {
                     entryExists = true
-                    entry.tasks.append(newToDo)
+                    entry.tasks!.append(newToDo)
                 }
             }
             
@@ -67,7 +67,7 @@ struct ContentView: View {
                     self.initializeConquer()
                 }
                 addNewEntry(day: dueDateAsString)
-                items[-1].tasks.append(newToDo)
+                items[-1].tasks!.append(newToDo)
             }
             
         }
@@ -75,11 +75,11 @@ struct ContentView: View {
     
     func addNewEntry(day: String) {
         print("New Entry Being Added!")
-        let newEntry = Item(itemType: .dailyEntry)
+        var newEntry = Item(itemType: .dailyEntry)
         newEntry.timestamp = day
         let dayOfTheWeek = day.components(separatedBy: ",")[0]
         if (dayOfTheWeek == items[0].timestamp) {
-            newEntry.journals.append(journal(journalTitle: "Reflect on your To-Be list", journalText: "*ADD TO-BEs HERE*"))
+            newEntry.journals!.append(journal(journalTitle: "Reflect on your To-Be list", journalText: "*ADD TO-BEs HERE*"))
         }
         
         var dayOfTheWeekEnum = RoutineSetting.daily
@@ -103,14 +103,14 @@ struct ContentView: View {
             print("How did we get here? :3")
         }
         
-        for routine in items[1].tasks {
+        for routine in items[1].tasks! {
             if (routine.routineSetting == .daily || routine.routineSetting == dayOfTheWeekEnum) {
-                newEntry.tasks.append(routine)
+                newEntry.tasks!.append(routine)
             }
         }
         
         modelContext.insert(newEntry)
-        
+        try? modelContext.save()
     }
     
     
