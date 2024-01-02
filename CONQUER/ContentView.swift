@@ -20,7 +20,7 @@ struct ContentView: View {
                 .tabItem { Label("Journal", systemImage: "book.fill") }
             Text("Projects")
                 .tabItem { Label("Projects", systemImage: "hammer.fill") }
-            Text("Settings")
+            settingsview(ourModelContext: modelContext, initalizeConquer: self.initializeConquer)
                 .tabItem { Label("Settings", systemImage: "gear") }
         }
         .onAppear(perform: {initializeConquer()})
@@ -69,7 +69,6 @@ struct ContentView: View {
                 addNewEntry(day: dueDateAsString)
                 items.last!.tasks!.append(newToDo)
             }
-            
         }
     }
     

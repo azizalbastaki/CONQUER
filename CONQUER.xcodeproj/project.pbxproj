@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE0465A62B43F82700871F67 /* settingsview.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0465A52B43F82700871F67 /* settingsview.swift */; };
 		CE2CA2E12B4056B0003CAFD7 /* CONQUERApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2CA2E02B4056B0003CAFD7 /* CONQUERApp.swift */; };
 		CE2CA2E32B4056B0003CAFD7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2CA2E22B4056B0003CAFD7 /* ContentView.swift */; };
 		CE2CA2E52B4056B0003CAFD7 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2CA2E42B4056B0003CAFD7 /* Item.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CE0465A52B43F82700871F67 /* settingsview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = settingsview.swift; sourceTree = "<group>"; };
 		CE2CA2DD2B4056B0003CAFD7 /* CONQUER.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CONQUER.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE2CA2E02B4056B0003CAFD7 /* CONQUERApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CONQUERApp.swift; sourceTree = "<group>"; };
 		CE2CA2E22B4056B0003CAFD7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				CE2CA2EC2B4056B0003CAFD7 /* Info.plist */,
 				CE2CA2E92B4056B0003CAFD7 /* Preview Content */,
 				CE2CA30E2B4066B1003CAFD7 /* todaystodoview.swift */,
+				CE0465A52B43F82700871F67 /* settingsview.swift */,
 			);
 			path = CONQUER;
 			sourceTree = "<group>";
@@ -268,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE2CA30F2B4066B1003CAFD7 /* todaystodoview.swift in Sources */,
+				CE0465A62B43F82700871F67 /* settingsview.swift in Sources */,
 				CE2CA2E32B4056B0003CAFD7 /* ContentView.swift in Sources */,
 				CE2CA2E52B4056B0003CAFD7 /* Item.swift in Sources */,
 				CE2CA2E12B4056B0003CAFD7 /* CONQUERApp.swift in Sources */,

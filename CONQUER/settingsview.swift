@@ -6,13 +6,29 @@
 //
 
 import SwiftUI
-
+import SwiftData
 struct settingsview: View {
+    var ourModelContext: ModelContext
+    var initalizeConquer: () -> Void
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text("Settings")
+            Button(action: deletething, label: {
+                Text("Delete all data and crash")
+            })
+        }
     }
+    func deletething() {
+        do {
+            try ourModelContext.delete(model: Item.self)
+            initalizeConquer()
+        } catch {
+            print("Could not delete.")
+        }
+    }
+    
 }
-
-#Preview {
-    settingsview()
-}
+//
+//#Preview {
+//    settingsview()
+//}
