@@ -67,7 +67,7 @@ struct ContentView: View {
                     self.initializeConquer()
                 }
                 addNewEntry(day: dueDateAsString)
-                items[-1].tasks!.append(newToDo)
+                items.last!.tasks!.append(newToDo)
             }
             
         }
