@@ -69,10 +69,12 @@ struct ContentView: View {
                 addNewEntry(day: dueDateAsString)
                 items.last!.tasks!.append(newToDo)
             }
+            try? modelContext.save()
+
         }
     }
     
-    func addNewEntry(day: String) {
+    func addNewEntry(day: String) -> Item {
         print("New Entry Being Added!")
         var newEntry = Item(itemType: .dailyEntry)
         newEntry.timestamp = day
@@ -110,6 +112,7 @@ struct ContentView: View {
         
         modelContext.insert(newEntry)
         try? modelContext.save()
+        return newEntry
     }
     
     

@@ -10,11 +10,11 @@ import SwiftData
 
 struct todaystodoview: View {
     var ourModelContext: ModelContext
-    //var entries: () -> [Item]
     var entries: [Item]
     var addFunction: (String, Date, Int, String, String) -> Void
     var initializeConquer: () -> Void
-    var addEntry: (String) -> Void
+    var addEntry: (String) -> Item
+    @State var dateShown = getTodaysDate()
     @State var taskTitle = ""
     @State var taskDescription = ""
     @State var taskDuration = 30
@@ -27,15 +27,17 @@ struct todaystodoview: View {
             VStack {
                 VStack {
                     HStack {
-                        Text("Today's Tasks")
+                        Text("Daily Tasks")
                             .font(.title)
                             .padding(.horizontal)
                             .bold()
                         
                         Spacer()
-                        Button(action: deletething, label: {Image(systemName: "calendar")
-                                .padding(.horizontal)
-                        })
+//                        Button(action: deletething, label: {Image(systemName: "calendar")
+//                                .padding(.horizontal)
+//                        })
+//                        
+                        DatePicker(selection: $date, displayedComponents: .date, label: {Image(systemName: "calendar")})
                         
                         NavigationLink {
                             Form {
@@ -44,7 +46,7 @@ struct todaystodoview: View {
                                 }
                                 
                                 Section {
-                                    TextField("Description of Task. For example, Why are you doing this Task? How will this help you achieve a long term goal?", text: self.$taskDescription)
+                                    TextField("What are the long term goals you are hoping to achieve with this task?", text: self.$taskDescription)
                                         .lineLimit(5, reservesSpace: true)
                                 }
                                 
@@ -84,12 +86,6 @@ struct todaystodoview: View {
                                 .font(.system(size: 25))
                         }
                     }
-                    
-                    HStack {
-                        Text(getTodaysDate())
-                            .padding(.horizontal)
-                        Spacer()
-                    }
                 }
                 .padding(.horizontal)
                 List {
@@ -103,23 +99,24 @@ struct todaystodoview: View {
     }
     
     
-    func getTodaysEntry(items: [Item], initializeFunc: () -> Void, newEntryFunc: (String) -> Void) -> Item {
-        if (searchForEntry(items: items, entryTimestamp: getTodaysDate()) != nil) {
-            return searchForEntry(items: items, entryTimestamp: getTodaysDate())!
+    func getTodaysEntry(items: [Item], initializeFunc: () -> Void, newEntryFunc: (String) -> Item) -> Item {
+        let dateWanted = getDateAsString(dateObject: date)
+        if (searchForEntry(items: items, entryTimestamp: dateWanted) != nil) {
+            return searchForEntry(items: items, entryTimestamp: dateWanted)!
         }
         
         else {
             if (items.count == 0) {
                 initializeFunc()
             }
-            newEntryFunc(getTodaysDate())
-            return searchForEntry(items: items, entryTimestamp: getTodaysDate())!
+            return newEntryFunc(dateWanted)
+            //return searchForEntry(items: self.entries, entryTimestamp: dateWanted)!
         }
     }
     
     func searchForEntry(items: [Item], entryTimestamp: String) -> Item? {
         for item in items {
-            if (item.timestamp == getTodaysDate()) {
+            if (item.timestamp == entryTimestamp) {
                 return item
             }
         }
@@ -148,7 +145,7 @@ struct todoRow: View {
     var body: some View {
         HStack{
             Button(action: dothing, label: {
-                Image(systemName: "checkmark.circle")
+                Image(systemName: "circle")
             })
             Text(taskTitle)
             Text(tagTitle)
@@ -166,9 +163,13 @@ struct todoRow: View {
 
 
 func getTodaysDate() -> String {
+    getDateAsString(dateObject: Date.now)
+}
+
+func getDateAsString(dateObject: Date) -> String {
     let formatter = DateFormatter()
     formatter.dateStyle = .full
-    return formatter.string(from: .now)
+    return formatter.string(from: dateObject)
 }
 //#Preview {
 //    todaystodoview()
