@@ -37,7 +37,8 @@ struct todaystodoview: View {
 //                                .padding(.horizontal)
 //                        })
 //                        
-                        DatePicker(selection: $date, displayedComponents: .date, label: {Image(systemName: "calendar")})
+                        DatePicker(selection: $date, displayedComponents: .date, label: {(Text("Showing Tasks for: "))})
+                            .labelsHidden()
                         
                         NavigationLink {
                             Form {
