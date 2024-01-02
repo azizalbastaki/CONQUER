@@ -33,36 +33,37 @@ struct todaystodoview: View {
                             .bold()
                         
                         Spacer()
-//                        Button(action: deletething, label: {Image(systemName: "calendar")
-//                                .padding(.horizontal)
-//                        })
-//                        
+                        //                        Button(action: deletething, label: {Image(systemName: "calendar")
+                        //                                .padding(.horizontal)
+                        //                        })
+                        //
                         DatePicker(selection: $date, displayedComponents: .date, label: {(Text("Showing Tasks for: "))})
                             .labelsHidden()
                         
                         NavigationLink {
                             Form {
-                                Section {
+                                Section("Task Name") {
                                     TextField("Task Name", text: self.$taskTitle)
                                 }
                                 
-                                Section {
-                                    TextField("What are the long term goals you are hoping to achieve with this task?", text: self.$taskDescription)
-                                        .lineLimit(5, reservesSpace: true)
+                                Section("Task Description") {
+                                    TextField("What are the long term goals you are hoping to achieve with this task?", text: self.$taskDescription, axis: .vertical)
+                                        .lineLimit(2...)
+                                    
                                 }
                                 
-                                Section {
+                                Section("Duration of Task (in minutes)") {
                                     TextField("In minutes, how long will this task take?", value: self.$taskDuration, formatter: NumberFormatter())
                                         .keyboardType(.numberPad)
                                 }
                                 
-                                Section {
+                                Section("Date of Task") {
                                     DatePicker(selection: $date, in: Date.now..., displayedComponents: .date) {
                                         Text("Task set for \(DateFormatter().string(from: date))")
                                     }
                                     
                                 }
-                                Section {
+                                Section("Tagging") {
                                     TextField("Tag this Task", text: $taskTag)
                                 }
                                 
@@ -78,6 +79,7 @@ struct todaystodoview: View {
                                     Text("Add Task")
                                         .padding(.trailing)
                                         .font(.system(size: 25))
+                                    
                                     
                                 })
                             }
@@ -132,7 +134,7 @@ struct todaystodoview: View {
             print("Could not delete.")
         }
     }
-
+    
 }
 func dothing() {
     print("Hello")
@@ -149,16 +151,20 @@ struct todoRow: View {
                 Image(systemName: "circle")
             })
             Text(taskTitle)
+            Spacer()
             Text(tagTitle)
                 .background(.red)
                 .foregroundStyle(.white)
                 .safeAreaPadding(.horizontal, 5)
             Text("\(String(duration)) minutes")
+            
                 .foregroundStyle(.white)
                 .background(.purple)
                 .safeAreaPadding(.horizontal, 5)
             
         }
+        .lineLimit(1)
+        .minimumScaleFactor(0.01)
     }
 }
 
