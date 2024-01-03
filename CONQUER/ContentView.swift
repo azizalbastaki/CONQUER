@@ -11,7 +11,7 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query var items: [Item]
-
+    
     var body: some View {
         TabView {
             todaystodoview(ourModelContext: modelContext, entries: items, addFunction: self.addToDoTask, initializeConquer: self.initializeConquer, addEntry: self.addNewEntry)
@@ -70,7 +70,7 @@ struct ContentView: View {
                 items.last!.tasks!.append(newToDo)
             }
             try? modelContext.save()
-
+            
         }
     }
     
@@ -78,35 +78,40 @@ struct ContentView: View {
         print("New Entry Being Added!")
         var newEntry = Item(itemType: .dailyEntry)
         newEntry.timestamp = day
-        let dayOfTheWeek = day.components(separatedBy: ",")[0]
-        if (dayOfTheWeek == items[0].timestamp) {
-            newEntry.journals!.append(journal(journalTitle: "Reflect on your To-Be list", journalText: "*ADD TO-BEs HERE*"))
-        }
         
-        var dayOfTheWeekEnum = RoutineSetting.daily
-        
-        switch dayOfTheWeek {
-        case "Monday":
-            dayOfTheWeekEnum = .monday
-        case "Tuesday":
-            dayOfTheWeekEnum = .tuesday
-        case "Wednesday":
-            dayOfTheWeekEnum = .wednesday
-        case "Thursday":
-            dayOfTheWeekEnum = .thursday
-        case "Friday":
-            dayOfTheWeekEnum = .friday
-        case "Saturday":
-            dayOfTheWeekEnum = .saturday
-        case "Sunday":
-            dayOfTheWeekEnum = .sunday
-        default:
-            print("How did we get here? :3")
-        }
-        
-        for routine in items[1].tasks! {
-            if (routine.routineSetting == .daily || routine.routineSetting == dayOfTheWeekEnum) {
-                newEntry.tasks!.append(routine)
+        if (getTodaysDate() == day || Date.now < getDateFromString(dateString: day)) {
+            
+            
+            let dayOfTheWeek = day.components(separatedBy: ",")[0]
+            if (dayOfTheWeek == items[0].timestamp) {
+                newEntry.journals!.append(journal(journalTitle: "Reflect on your To-Be list", journalText: "*ADD TO-BEs HERE*"))
+            }
+            
+            var dayOfTheWeekEnum = RoutineSetting.daily
+            
+            switch dayOfTheWeek {
+            case "Monday":
+                dayOfTheWeekEnum = .monday
+            case "Tuesday":
+                dayOfTheWeekEnum = .tuesday
+            case "Wednesday":
+                dayOfTheWeekEnum = .wednesday
+            case "Thursday":
+                dayOfTheWeekEnum = .thursday
+            case "Friday":
+                dayOfTheWeekEnum = .friday
+            case "Saturday":
+                dayOfTheWeekEnum = .saturday
+            case "Sunday":
+                dayOfTheWeekEnum = .sunday
+            default:
+                print("How did we get here? :3")
+            }
+            
+            for routine in items[1].tasks! {
+                if (routine.routineSetting == .daily || routine.routineSetting == dayOfTheWeekEnum) {
+                    newEntry.tasks!.append(routine)
+                }
             }
         }
         
