@@ -72,14 +72,17 @@ struct todaystodoview: View {
                                     self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag)
                                     self.taskTitle = ""
                                     self.taskDescription = ""
-                                    self.taskDuration = 0
-                                    self.date = Date.now
+                                    self.taskDuration = 30
                                     self.taskTag = ""
                                 },
                                        label: {
-                                    Text("Add Task")
-                                        .padding(.trailing)
-                                        .font(.system(size: 25))
+                                    HStack {
+                                        Spacer()
+                                        Text("Add Task")
+                                            .padding(.trailing)
+                                            .font(.system(size: 25))
+                                        Spacer()
+                                    }
                                     
                                     
                                 })
