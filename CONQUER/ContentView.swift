@@ -126,7 +126,23 @@ struct ContentView: View {
 
 
 
-// VIEWS
+// GLOBAL FUNCTIONS
+
+func getTodaysDate() -> String {
+    getDateAsString(dateObject: Date.now)
+}
+
+func getDateAsString(dateObject: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .full
+    return formatter.string(from: dateObject)
+}
+
+func getDateFromString(dateString: String) -> Date {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .full
+    return formatter.date(from: dateString)!
+}
 
 
 
