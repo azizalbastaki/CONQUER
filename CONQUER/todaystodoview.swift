@@ -14,8 +14,9 @@ struct todaystodoview: View {
     var addFunction: (String, Date, Int, String, String, [SubTask]) -> Void
     var initializeConquer: () -> Void
     var addEntry: (String) -> Item
+    var toggleTask: (String, UUID) -> Bool
+    var toggleSubTask: (String, UUID, UUID) -> Bool
     @State var subtasks: [SubTask] = [SubTask(taskText: "")]
-    @State var dateShown = getTodaysDate()
     @State var taskTitle = ""
     @State var taskDescription = ""
     @State var taskDuration = 30
@@ -110,7 +111,7 @@ struct todaystodoview: View {
                 .padding(.horizontal)
                 List {
                     ForEach(getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks!) { entry in
-                        todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration, taskDescription: entry.taskDescription, taskInstructions: entry.subTasks)
+                        todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration, taskDescription: entry.taskDescription, taskInstructions: entry.subTasks, todoComplete: entry.completed, todoUUID: entry.id, toggleFunction: self.toggleTask,toggleSubtaskFunction: self.toggleSubTask, timestamp: getDateAsString(dateObject: date))
                     }
                 }
             }
@@ -167,14 +168,26 @@ struct todoRow: View {
     var duration: Int
     var taskDescription: String
     var taskInstructions: [SubTask]
+    @State var todoComplete: Bool
+    var todoUUID: UUID
+    var toggleFunction: (String, UUID) -> Bool
+    var toggleSubtaskFunction: (String, UUID, UUID) -> Bool
+    var timestamp: String
     var body: some View {
         HStack{
-            Button(action: dothing, label: {
-                Image(systemName: "circle")
+            Button(action: toggleCheckbox, label: {
+                if (todoComplete) {
+                    Image(systemName: "checkmark.circle")
+                } else {
+                    Image(systemName: "circle")
+                }
             })
+            .buttonStyle(.plain)
+            
+            Spacer()
             
             NavigationLink {
-                todoDetailedView(taskTitle: taskTitle, taskDescription: taskDescription, instructions: taskInstructions)
+                todoDetailedView(taskTitle: taskTitle, taskDescription: taskDescription, instructions: taskInstructions, toggleFunction: self.toggleSubtaskFunction, timestamp: timestamp, todoUUID: todoUUID)
             } label: {
                 HStack{
                     Text(taskTitle)
@@ -182,25 +195,36 @@ struct todoRow: View {
                     Text(tagTitle)
                         .background(.red)
                         .foregroundStyle(.white)
-                        .safeAreaPadding(.horizontal, 5)
                     Text("\(String(duration)) minutes")
-                    
                         .foregroundStyle(.white)
                         .background(.purple)
-                        .safeAreaPadding(.horizontal, 5)
                 }
-            }
+            }     .safeAreaPadding(.horizontal, 5)
+            
+
             
         }
         .lineLimit(1)
         .minimumScaleFactor(0.01)
+    }
+    
+    func toggleCheckbox() {
+        print("Called")
+        if (self.toggleFunction(timestamp, todoUUID) == true) {
+            self.todoComplete = true
+        } else {
+            self.todoComplete = false
+        }
     }
 }
 
 struct todoDetailedView: View {
     var taskTitle: String
     var taskDescription: String
-    var instructions: [SubTask]
+    @State var instructions: [SubTask]
+    var toggleFunction: (String, UUID, UUID) -> Bool
+    var timestamp: String
+    var todoUUID: UUID
     var body: some View {
         VStack {
             Text(taskTitle)
@@ -213,12 +237,25 @@ struct todoDetailedView: View {
             
             if (instructions != [] && !(instructions.count == 1 && instructions[0].taskText == "")) {
                 List {
-                    ForEach(instructions) { instruction in
-                        
-                        Text(instruction.taskText)
-                        
-                    }
+                    ForEach($instructions, id: \.self) { instruction in
+                        Button(action: {
+                            toggleFunction(timestamp, todoUUID, instruction.id)
+                            instructions[instructions.firstIndex(of: instruction.wrappedValue)!].completed.toggle()
+                            
+                        }, label: {
+                        HStack {
+                            if (instruction.wrappedValue.completed == true) {
+                                Image(systemName: "checkmark.circle")
+                            } else {
+                                Image(systemName: "circle")
+                            }
+                            Text(instruction.wrappedValue.taskText)
+                        }
+                        .tint(.secondary)
+                        .padding(.horizontal)
+                    })
                 }
+            }
             }
             else {
                 Text("No Subtasks Provided")

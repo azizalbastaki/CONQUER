@@ -14,7 +14,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            todaystodoview(ourModelContext: modelContext, entries: items, addFunction: self.addToDoTask, initializeConquer: self.initializeConquer, addEntry: self.addNewEntry)
+            todaystodoview(ourModelContext: modelContext, entries: items, addFunction: self.addToDoTask, initializeConquer: self.initializeConquer, addEntry: self.addNewEntry, toggleTask: self.toggleTask, toggleSubTask: self.toggleSubTask)
                 .tabItem { Label("Today's Tasks", systemImage: "dot.scope") }
             Text("Journal")
                 .tabItem { Label("Journal", systemImage: "book.fill") }
@@ -120,7 +120,64 @@ struct ContentView: View {
         return newEntry
     }
     
+    func findEntryByTimestamp(timestamp: String) -> Item? {
+        for entry in items {
+            if (entry.timestamp == timestamp) {
+                return entry
+            }
+        }
+        return nil
+    }
     
+    func getTodoByUUID(timestamp: String, todoUUID: UUID) -> ToDoTask? {
+        for todo in findEntryByTimestamp(timestamp: timestamp)!.tasks! {
+            if (todo.id == todoUUID) {
+                return todo
+            }
+        }
+        return nil
+        
+    }
+    
+    func getSubTaskByUUID(timestamp: String, todoUUID: UUID, subtaskUUID: UUID) -> SubTask? {
+        for subtask in getTodoByUUID(timestamp: timestamp, todoUUID: todoUUID)!.subTasks {
+            if (subtask.id == subtaskUUID) {
+                return subtask
+            }
+        }
+        return nil
+    }
+    
+    func toggleTask(timestamp: String, todoUUID: UUID) -> Bool {
+        let todoTask = getTodoByUUID(timestamp: timestamp, todoUUID: todoUUID)
+        let entryIndex = items.firstIndex(of: findEntryByTimestamp(timestamp: timestamp)!)
+        let todoIndex = findEntryByTimestamp(timestamp: timestamp)?.tasks?.firstIndex(of: getTodoByUUID(timestamp: timestamp, todoUUID: todoUUID)!)
+        if (todoTask!.completed == false) {
+            items[entryIndex!].tasks![todoIndex!].completed = true
+            try? modelContext.save()
+            return true
+        } else {
+            items[entryIndex!].tasks![todoIndex!].completed = false
+            try? modelContext.save()
+            return false
+        }
+    }
+    
+    func toggleSubTask(timestamp: String, todoUUID: UUID, subtaskUUID: UUID) -> Bool {
+        var ourSubTask = getSubTaskByUUID(timestamp: timestamp, todoUUID: todoUUID, subtaskUUID: subtaskUUID)!
+        let entryIndex = items.firstIndex(of: findEntryByTimestamp(timestamp: timestamp)!)
+        let todoIndex = findEntryByTimestamp(timestamp: timestamp)?.tasks?.firstIndex(of: getTodoByUUID(timestamp: timestamp, todoUUID: todoUUID)!)
+        let subtaskIndex = getTodoByUUID(timestamp: timestamp, todoUUID: todoUUID)?.subTasks.firstIndex(of: getSubTaskByUUID(timestamp: timestamp, todoUUID: todoUUID, subtaskUUID: subtaskUUID)!)
+        if (ourSubTask.completed == false) {
+            items[entryIndex!].tasks![todoIndex!].subTasks[subtaskIndex!].completed = true
+            try? modelContext.save()
+            return true
+        } else {
+            items[entryIndex!].tasks![todoIndex!].subTasks[subtaskIndex!].completed = false
+            try? modelContext.save()
+            return false
+        }
+    }
     
 }
 
