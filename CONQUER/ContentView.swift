@@ -47,9 +47,9 @@ struct ContentView: View {
         }
     }
     
-    func addToDoTask(taskTitle: String, dueBy: Date, minutes: Int, taskDescription: String, tagTitle: String) {
+    func addToDoTask(taskTitle: String, dueBy: Date, minutes: Int, taskDescription: String, tagTitle: String, instructions: [SubTask]) {
         withAnimation {
-            let newToDo = ToDoTask(completed: false, deadline: dueBy, duration: minutes, taskTitle: taskTitle, taskDescription: taskDescription, tag: tagTitle, routineSetting: .none)
+            let newToDo = ToDoTask(completed: false, deadline: dueBy, duration: minutes, taskTitle: taskTitle, taskDescription: taskDescription, tag: tagTitle, subTasks: instructions, routineSetting: .none)
             
             let formatter = DateFormatter()
             formatter.dateStyle = .full

@@ -11,10 +11,10 @@ import SwiftData
 struct todaystodoview: View {
     var ourModelContext: ModelContext
     var entries: [Item]
-    var addFunction: (String, Date, Int, String, String) -> Void
+    var addFunction: (String, Date, Int, String, String, [SubTask]) -> Void
     var initializeConquer: () -> Void
     var addEntry: (String) -> Item
-    @State var subtasks: [SubTask] = []
+    @State var subtasks: [SubTask] = [SubTask(taskText: "")]
     @State var dateShown = getTodaysDate()
     @State var taskTitle = ""
     @State var taskDescription = ""
@@ -85,11 +85,11 @@ struct todaystodoview: View {
                                 }
                                 
                                 Button(action: {
-                                    self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag)
+                                    self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag, subtasks)
                                     self.taskTitle = ""
                                     self.taskDescription = ""
                                     self.taskDuration = 30
-                                    self.subtasks = []
+                                    self.subtasks = [SubTask(taskText: "")]
                                     self.taskTag = ""
                                 },
                                        label: {
@@ -114,8 +114,7 @@ struct todaystodoview: View {
                 .padding(.horizontal)
                 List {
                     ForEach(getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks!) { entry in
-                        todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration)
-                        
+                        todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration, taskDescription: entry.taskDescription, taskInstructions: entry.subTasks)
                     }
                 }
             }
@@ -170,23 +169,30 @@ struct todoRow: View {
     var taskTitle: String
     var tagTitle: String
     var duration: Int
+    var taskDescription: String
+    var taskInstructions: [SubTask]
     var body: some View {
         HStack{
             Button(action: dothing, label: {
                 Image(systemName: "circle")
             })
-            HStack{
-                Text(taskTitle)
-                Spacer()
-                Text(tagTitle)
-                    .background(.red)
-                    .foregroundStyle(.white)
-                    .safeAreaPadding(.horizontal, 5)
-                Text("\(String(duration)) minutes")
-                
-                    .foregroundStyle(.white)
-                    .background(.purple)
-                    .safeAreaPadding(.horizontal, 5)
+            
+            NavigationLink {
+                todoDetailedView(taskTitle: taskTitle, taskDescription: taskDescription, instructions: taskInstructions)
+            } label: {
+                HStack{
+                    Text(taskTitle)
+                    Spacer()
+                    Text(tagTitle)
+                        .background(.red)
+                        .foregroundStyle(.white)
+                        .safeAreaPadding(.horizontal, 5)
+                    Text("\(String(duration)) minutes")
+                    
+                        .foregroundStyle(.white)
+                        .background(.purple)
+                        .safeAreaPadding(.horizontal, 5)
+                }
             }
             
         }
@@ -198,6 +204,7 @@ struct todoRow: View {
 struct todoDetailedView: View {
     var taskTitle: String
     var taskDescription: String
+    var instructions: [SubTask]
     var body: some View {
         VStack {
             Text(taskTitle)
@@ -207,7 +214,19 @@ struct todoDetailedView: View {
             Text(taskDescription)
                 .font(.subheadline)
                 .padding(.horizontal)
-        
+            
+            if (instructions != [] && !(instructions.count == 1 && instructions[0].taskText == "")) {
+                List {
+                    ForEach(instructions) { instruction in
+                        
+                        Text(instruction.taskText)
+                        
+                    }
+                }
+            }
+            else {
+                Text("No Subtasks Provided")
+            }
             
         }
     }
