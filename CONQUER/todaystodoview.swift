@@ -14,6 +14,7 @@ struct todaystodoview: View {
     var addFunction: (String, Date, Int, String, String) -> Void
     var initializeConquer: () -> Void
     var addEntry: (String) -> Item
+    @State var subtasks: [SubTask] = []
     @State var dateShown = getTodaysDate()
     @State var taskTitle = ""
     @State var taskDescription = ""
@@ -68,11 +69,27 @@ struct todaystodoview: View {
                                         .frame(alignment: .center)
                                 }
                                 
+                                Section("Sub Tasks, break the task down into small, concise instructions") {
+                                    List {
+                                        ForEach(self.$subtasks) { subtask in
+                                            TextField("Instruction", text: subtask.taskText)
+                                        }
+                                        .onDelete(perform: deleteSubtask)
+                                    }
+                                    
+                                    Button(action: {self.subtasks.append(SubTask(taskText: ""))}, label: {
+                                        Text("Add New Instruction")
+                                            .padding(.trailing)
+                                            
+                                    })
+                                }
+                                
                                 Button(action: {
                                     self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag)
                                     self.taskTitle = ""
                                     self.taskDescription = ""
                                     self.taskDuration = 30
+                                    self.subtasks = []
                                     self.taskTag = ""
                                 },
                                        label: {
@@ -139,6 +156,10 @@ struct todaystodoview: View {
         }
     }
     
+    func deleteSubtask(at offsets: IndexSet) {
+        subtasks.remove(atOffsets: offsets)
+    }
+    
 }
 func dothing() {
     print("Hello")
@@ -154,17 +175,19 @@ struct todoRow: View {
             Button(action: dothing, label: {
                 Image(systemName: "circle")
             })
-            Text(taskTitle)
-            Spacer()
-            Text(tagTitle)
-                .background(.red)
-                .foregroundStyle(.white)
-                .safeAreaPadding(.horizontal, 5)
-            Text("\(String(duration)) minutes")
-            
-                .foregroundStyle(.white)
-                .background(.purple)
-                .safeAreaPadding(.horizontal, 5)
+            HStack{
+                Text(taskTitle)
+                Spacer()
+                Text(tagTitle)
+                    .background(.red)
+                    .foregroundStyle(.white)
+                    .safeAreaPadding(.horizontal, 5)
+                Text("\(String(duration)) minutes")
+                
+                    .foregroundStyle(.white)
+                    .background(.purple)
+                    .safeAreaPadding(.horizontal, 5)
+            }
             
         }
         .lineLimit(1)
@@ -184,7 +207,8 @@ struct todoDetailedView: View {
             Text(taskDescription)
                 .font(.subheadline)
                 .padding(.horizontal)
-                
+        
+            
         }
     }
 }
