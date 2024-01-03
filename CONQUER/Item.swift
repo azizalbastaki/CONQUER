@@ -15,11 +15,13 @@ final class Item {
     var itemType: ItemType?
     var journals: [journal]?
     var tasks: [ToDoTask]?
+    var entryRating: Double?
     init(itemType: ItemType) {
         self.itemType = itemType
         self.timestamp = getTodaysDate()
         self.tasks = []
         self.journals = []
+        self.entryRating = 6.0
     }
 }
 
