@@ -38,14 +38,15 @@ struct journal: Codable, Hashable {
     var journalText: String
 }
 
-struct SubTask: Hashable, Codable {
+struct SubTask: Hashable, Codable, Identifiable {
+    var id = UUID()
     var taskText: String
-    var completed: Bool
+    var completed: Bool = false
     
 }
 
 struct ToDoTask: Hashable, Codable, Identifiable {
-    var id: String
+    var id = UUID()
     var completed: Bool
     var deadline: Date
     var duration: Int

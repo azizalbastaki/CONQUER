@@ -49,7 +49,7 @@ struct ContentView: View {
     
     func addToDoTask(taskTitle: String, dueBy: Date, minutes: Int, taskDescription: String, tagTitle: String) {
         withAnimation {
-            let newToDo = ToDoTask(id: taskTitle+taskDescription, completed: false, deadline: dueBy, duration: minutes, taskTitle: taskTitle, taskDescription: taskDescription, tag: tagTitle, routineSetting: .none)
+            let newToDo = ToDoTask(completed: false, deadline: dueBy, duration: minutes, taskTitle: taskTitle, taskDescription: taskDescription, tag: tagTitle, routineSetting: .none)
             
             let formatter = DateFormatter()
             formatter.dateStyle = .full
