@@ -34,10 +34,6 @@ struct todaystodoview: View {
                             .bold()
                         
                         Spacer()
-                        //                        Button(action: deletething, label: {Image(systemName: "calendar")
-                        //                                .padding(.horizontal)
-                        //                        })
-                        //
                         DatePicker(selection: $date, displayedComponents: .date, label: {(Text("Showing Tasks for: "))})
                             .labelsHidden()
                         
@@ -71,7 +67,7 @@ struct todaystodoview: View {
                                 
                                 Section("Sub Tasks, break the task down into small, concise instructions") {
                                     List {
-                                        ForEach(self.$subtasks) { subtask in
+                                        ForEach(self.$subtasks, id:\.self) { subtask in
                                             TextField("Instruction", text: subtask.taskText)
                                         }
                                         .onDelete(perform: deleteSubtask)
