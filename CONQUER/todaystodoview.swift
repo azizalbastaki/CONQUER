@@ -47,7 +47,7 @@ struct todaystodoview: View {
                                 }
                                 
                                 Section("Task Description") {
-                                    TextField("What are the long term goals you are hoping to achieve with this task?", text: self.$taskDescription, axis: .vertical)
+                                    TextField("What are the long term goals that you are hoping to achieve with this task?", text: self.$taskDescription, axis: .vertical)
                                         .lineLimit(2...)
                                     
                                 }
@@ -65,6 +65,7 @@ struct todaystodoview: View {
                                 }
                                 Section("Tagging") {
                                     TextField("Tag this Task", text: $taskTag)
+                                        .frame(alignment: .center)
                                 }
                                 
                                 Button(action: {
@@ -165,6 +166,23 @@ struct todoRow: View {
         }
         .lineLimit(1)
         .minimumScaleFactor(0.01)
+    }
+}
+
+struct todoDetailedView: View {
+    var taskTitle: String
+    var taskDescription: String
+    var body: some View {
+        VStack {
+            Text(taskTitle)
+                .font(.title)
+                .padding(.horizontal)
+                .bold()
+            Text(taskDescription)
+                .font(.subheadline)
+                .padding(.horizontal)
+                
+        }
     }
 }
 
