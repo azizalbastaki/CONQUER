@@ -16,6 +16,7 @@ struct todaystodoview: View {
     var addEntry: (String) -> Item
     var toggleTask: (String, UUID) -> Bool
     var toggleSubTask: (String, UUID, UUID) -> Bool
+    //var deleteTodo: (IndexSet) -> Void
     @State var subtasks: [SubTask] = [SubTask(taskText: "")]
     @State var taskTitle = ""
     @State var taskDescription = ""
@@ -113,9 +114,16 @@ struct todaystodoview: View {
                     ForEach(getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks!) { entry in
                         todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration, taskDescription: entry.taskDescription, taskInstructions: entry.subTasks, todoComplete: entry.completed, todoUUID: entry.id, toggleFunction: self.toggleTask,toggleSubtaskFunction: self.toggleSubTask, timestamp: getDateAsString(dateObject: date))
                     }
+                    .onDelete(perform: deleteTodo)
+                    
                 }
             }
         }
+    }
+    
+    func deleteTodo(at offset: IndexSet) {
+        self.entries[self.entries.firstIndex(of: getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry))!].tasks?.remove(atOffsets: offset)
+        try? ourModelContext.save()
     }
     
     
