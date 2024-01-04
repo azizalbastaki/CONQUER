@@ -52,8 +52,9 @@ struct ToDoTask: Hashable, Codable, Identifiable {
     var duration: Int
     var taskTitle: String
     var taskDescription: String
-    var taskPriority: Int = 1
+    var taskPriority: Int 
     var tag: String
+    
     var subTasks: [SubTask]
     var routineSetting: RoutineSetting
 }

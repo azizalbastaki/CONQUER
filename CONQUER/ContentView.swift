@@ -47,9 +47,9 @@ struct ContentView: View {
         }
     }
     
-    func addToDoTask(taskTitle: String, dueBy: Date, minutes: Int, taskDescription: String, tagTitle: String, instructions: [SubTask]) {
+    func addToDoTask(taskTitle: String, dueBy: Date, minutes: Int, taskDescription: String, tagTitle: String, instructions: [SubTask], priority: Int) {
         withAnimation {
-            let newToDo = ToDoTask(completed: false, deadline: dueBy, duration: minutes, taskTitle: taskTitle, taskDescription: taskDescription, tag: tagTitle, subTasks: instructions, routineSetting: .none)
+            let newToDo = ToDoTask(completed: false, deadline: dueBy, duration: minutes, taskTitle: taskTitle, taskDescription: taskDescription, taskPriority: priority, tag: tagTitle, subTasks: instructions, routineSetting: .none)
             
             let formatter = DateFormatter()
             formatter.dateStyle = .full
@@ -114,7 +114,7 @@ struct ContentView: View {
                 }
             }
         }
-        
+        print(self.items)
         modelContext.insert(newEntry)
         try? modelContext.save()
         return newEntry

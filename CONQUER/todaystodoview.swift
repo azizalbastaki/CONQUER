@@ -11,7 +11,7 @@ import SwiftData
 struct todaystodoview: View {
     var ourModelContext: ModelContext
     var entries: [Item]
-    var addFunction: (String, Date, Int, String, String, [SubTask]) -> Void
+    var addFunction: (String, Date, Int, String, String, [SubTask], Int) -> Void
     var initializeConquer: () -> Void
     var addEntry: (String) -> Item
     var toggleTask: (String, UUID) -> Bool
@@ -23,6 +23,7 @@ struct todaystodoview: View {
     @State var taskDuration = 30
     @State var date = Date.now
     @State var taskTag = ""
+    @State var timeSelected = Date.now
     
     
     var body: some View {
@@ -42,7 +43,7 @@ struct todaystodoview: View {
                         NavigationLink {
                             Form {
                                 Section("Task Name") {
-                                    TextField("Task Name", text: self.$taskTitle)
+                                    TextField("Keep it brief!", text: self.$taskTitle)
                                 }
                                 
                                 Section("Task Description") {
@@ -62,15 +63,20 @@ struct todaystodoview: View {
                                     }
                                     
                                 }
+                                
+                                Section("Time of Task") {
+                                    DatePicker("Please enter a time", selection: $timeSelected, displayedComponents: .hourAndMinute)
+                                }
+                                
                                 Section("Tagging") {
-                                    TextField("Tag this Task", text: $taskTag)
+                                    TextField("Give this task a label", text: $taskTag)
                                         .frame(alignment: .center)
                                 }
                                 
-                                Section("Sub Tasks, break the task down into small, concise instructions") {
+                                Section("Sub Instructions - break the task down") {
                                     List {
                                         ForEach(self.$subtasks, id:\.self) { subtask in
-                                            TextField("Instruction", text: subtask.taskText)
+                                            TextField("Keep it small and concise", text: subtask.taskText)
                                         }
                                         .onDelete(perform: deleteSubtask)
                                     }
@@ -78,17 +84,22 @@ struct todaystodoview: View {
                                     Button(action: {self.subtasks.append(SubTask(taskText: ""))}, label: {
                                         Text("Add New Instruction")
                                             .padding(.trailing)
-                                            
+                                        
                                     })
                                 }
                                 
                                 Button(action: {
-                                    self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag, subtasks)
+                                    let dateFormatter = DateFormatter()
+                                    dateFormatter.dateFormat = "hhmm"
+                                    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                                    let timeAsString = dateFormatter.string(from: self.timeSelected)
+                                    self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag, subtasks, Int(timeAsString)!)
                                     self.taskTitle = ""
                                     self.taskDescription = ""
                                     self.taskDuration = 30
                                     self.subtasks = [SubTask(taskText: "")]
                                     self.taskTag = ""
+                                    
                                 },
                                        label: {
                                     HStack {
@@ -112,7 +123,7 @@ struct todaystodoview: View {
                 .padding(.horizontal)
                 List {
                     ForEach(getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks!) { entry in
-                        todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration, taskDescription: entry.taskDescription, taskInstructions: entry.subTasks, todoComplete: entry.completed, todoUUID: entry.id, toggleFunction: self.toggleTask,toggleSubtaskFunction: self.toggleSubTask, timestamp: getDateAsString(dateObject: date))
+                        todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration, taskDescription: entry.taskDescription, taskInstructions: entry.subTasks, todoComplete: entry.completed, todoUUID: entry.id, toggleFunction: self.toggleTask,toggleSubtaskFunction: self.toggleSubTask, timestamp: getDateAsString(dateObject: date), taskPriority: entry.taskPriority)
                     }
                     .onDelete(perform: deleteTodo)
                     
@@ -165,9 +176,6 @@ struct todaystodoview: View {
     }
     
 }
-func dothing() {
-    print("Hello")
-}
 
 struct todoRow: View {
     @State var isOn = false
@@ -181,6 +189,7 @@ struct todoRow: View {
     var toggleFunction: (String, UUID) -> Bool
     var toggleSubtaskFunction: (String, UUID, UUID) -> Bool
     var timestamp: String
+    var taskPriority: Int
     var body: some View {
         HStack{
             Button(action: toggleCheckbox, label: {
@@ -203,17 +212,26 @@ struct todoRow: View {
                     Text(tagTitle)
                         .background(.red)
                         .foregroundStyle(.white)
-                    Text("\(String(duration)) minutes")
+                    Text(self.getTimeAsString())
                         .foregroundStyle(.white)
                         .background(.purple)
                 }
             }     .safeAreaPadding(.horizontal, 5)
             
-
+            
             
         }
         .lineLimit(1)
         .minimumScaleFactor(0.01)
+    }
+    
+    func getTimeAsString() -> String {
+        print(taskPriority)
+        var ourTaskPriorityString = String(self.taskPriority)
+        while (ourTaskPriorityString.count < 4) {
+            ourTaskPriorityString = "0" + ourTaskPriorityString
+        }
+        return (ourTaskPriorityString.prefix(2) + ":" + ourTaskPriorityString.suffix(2))
     }
     
     func toggleCheckbox() {
@@ -251,19 +269,19 @@ struct todoDetailedView: View {
                             instructions[instructions.firstIndex(of: instruction.wrappedValue)!].completed.toggle()
                             
                         }, label: {
-                        HStack {
-                            if (instruction.wrappedValue.completed == true) {
-                                Image(systemName: "checkmark.circle")
-                            } else {
-                                Image(systemName: "circle")
+                            HStack {
+                                if (instruction.wrappedValue.completed == true) {
+                                    Image(systemName: "checkmark.circle")
+                                } else {
+                                    Image(systemName: "circle")
+                                }
+                                Text(instruction.wrappedValue.taskText)
                             }
-                            Text(instruction.wrappedValue.taskText)
-                        }
-                        .tint(.secondary)
-                        .padding(.horizontal)
-                    })
+                            .tint(.secondary)
+                            .padding(.horizontal)
+                        })
+                    }
                 }
-            }
             }
             else {
                 Text("No Subtasks Provided")
