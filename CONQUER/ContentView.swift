@@ -70,6 +70,10 @@ struct ContentView: View {
                 items.last!.tasks!.append(newToDo)
             }
             try? modelContext.save()
+            var sortedTodos = items.last!.tasks!.sorted { $0.taskPriority < $1.taskPriority }
+            items.last!.tasks! = sortedTodos
+            print(sortedTodos)
+            try? modelContext.save()
             
         }
     }
