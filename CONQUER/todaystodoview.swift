@@ -90,7 +90,7 @@ struct todaystodoview: View {
                                 
                                 Button(action: {
                                     let dateFormatter = DateFormatter()
-                                    dateFormatter.dateFormat = "hhmm"
+                                    dateFormatter.dateFormat = "HHmm"
                                     dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                                     let timeAsString = dateFormatter.string(from: self.timeSelected)
                                     self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag, subtasks, Int(timeAsString)!)
