@@ -29,15 +29,30 @@ struct journalsview: View {
                         .bold()
                 }
                 
-                ForEach($journals, id: \.self) { journal in
-                    TextField("What is the title of your entry?", text: journal.journalTitle)
-                    TextField("Start writing here...", text: journal.journalText)
+                HStack {
+                    Text("Your rating for today: ")
+                    TextField("Rate your Day", value: $entries[self.getIndex()!].entryRating, formatter: self.getNumberFormatter())
+                        .foregroundStyle(.white)
+                        .background(.blue)
+                        .keyboardType(.decimalPad)
+                    Spacer()
+                    
                 }
-                .onChange(of: self.journals, {
-                    self.entries[self.getIndex()!].journals = self.journals
-                    try? ourModelContext.save()
-                })
-
+                .padding()
+                
+                ScrollView {
+                    
+                    ForEach($journals) { $journal in
+                        TextField("What is the title of your entry?", text: $journal.journalTitle)
+                            .bold()
+                        TextField("Start writing here...", text: $journal.journalText)
+                    }
+                    .padding()
+                    .onChange(of: self.journals, {
+                        self.entries[self.getIndex()!].journals = self.journals
+                        try? ourModelContext.save()
+                    })
+                }
             }
         }
         .onAppear( perform: { 
@@ -57,12 +72,18 @@ struct journalsview: View {
         var index = 0
         for entry in entries {
             if (entry.timestamp == getTodaysDate()) {
-                print("Index chosen is")
-                print(entries[1].timestamp)
                 return index
             }
             index = index + 1
         }
         return nil
+    }
+    
+    func getNumberFormatter() -> NumberFormatter {
+        let numFormatter = NumberFormatter()
+        numFormatter.numberStyle = .decimal
+        numFormatter.minimumFractionDigits = 1
+        numFormatter.maximumFractionDigits = 1
+        return numFormatter
     }
 }
