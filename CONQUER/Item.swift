@@ -33,7 +33,8 @@ enum ItemType: Codable, Hashable{
     case taglist
 }
 
-struct journal: Codable, Hashable {
+struct journal: Codable, Hashable, Identifiable {
+    var id = UUID()
     var journalTitle: String
     var journalText: String
 }

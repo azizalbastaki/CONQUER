@@ -122,7 +122,7 @@ struct todaystodoview: View {
                 }
                 .padding(.horizontal)
                 List {
-                    ForEach(getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks!) { entry in
+                    ForEach(getDaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks!) { entry in
                         todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration, taskDescription: entry.taskDescription, taskInstructions: entry.subTasks, todoComplete: entry.completed, todoUUID: entry.id, toggleFunction: self.toggleTask,toggleSubtaskFunction: self.toggleSubTask, timestamp: getDateAsString(dateObject: date), taskPriority: entry.taskPriority)
                     }
                     .onDelete(perform: deleteTodo)
@@ -133,12 +133,12 @@ struct todaystodoview: View {
     }
     
     func deleteTodo(at offset: IndexSet) {
-        self.entries[self.entries.firstIndex(of: getTodaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry))!].tasks?.remove(atOffsets: offset)
+        self.entries[self.entries.firstIndex(of: getDaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry))!].tasks?.remove(atOffsets: offset)
         try? ourModelContext.save()
     }
     
     
-    func getTodaysEntry(items: [Item], initializeFunc: () -> Void, newEntryFunc: (String) -> Item) -> Item {
+    func getDaysEntry(items: [Item], initializeFunc: () -> Void, newEntryFunc: (String) -> Item) -> Item {
         let dateWanted = getDateAsString(dateObject: date)
         if (searchForEntry(items: items, entryTimestamp: dateWanted) != nil) {
             return searchForEntry(items: items, entryTimestamp: dateWanted)!
@@ -218,15 +218,12 @@ struct todoRow: View {
                 }
             }     .safeAreaPadding(.horizontal, 5)
             
-            
-            
         }
         .lineLimit(1)
         .minimumScaleFactor(0.01)
     }
     
     func getTimeAsString() -> String {
-        print(taskPriority)
         var ourTaskPriorityString = String(self.taskPriority)
         while (ourTaskPriorityString.count < 4) {
             ourTaskPriorityString = "0" + ourTaskPriorityString
@@ -235,7 +232,6 @@ struct todoRow: View {
     }
     
     func toggleCheckbox() {
-        print("Called")
         if (self.toggleFunction(timestamp, todoUUID) == true) {
             self.todoComplete = true
         } else {
