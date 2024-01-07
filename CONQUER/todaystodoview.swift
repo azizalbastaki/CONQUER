@@ -75,8 +75,8 @@ struct todaystodoview: View {
                                 
                                 Section("Sub Instructions - break the task down") {
                                     List {
-                                        ForEach(self.$subtasks, id:\.self) { subtask in
-                                            TextField("Keep it small and concise", text: subtask.taskText)
+                                        ForEach(self.$subtasks) { $subtask in
+                                            TextField("Keep it small and concise", text: $subtask.taskText)
                                         }
                                         .onDelete(perform: deleteSubtask)
                                     }
