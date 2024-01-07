@@ -212,11 +212,13 @@ struct todoRow: View {
                     Text(tagTitle)
                         .background(.red)
                         .foregroundStyle(.white)
+                        .safeAreaPadding(.horizontal, 5)
                     Text(self.getTimeAsString())
                         .foregroundStyle(.white)
                         .background(.purple)
+                        .safeAreaPadding(.horizontal, 5)
                 }
-            }     .safeAreaPadding(.horizontal, 5)
+            }
             
         }
         .lineLimit(1)

@@ -32,8 +32,8 @@ struct journalsview: View {
                 HStack {
                     Text("Your rating for today: ")
                     TextField("Rate your Day", value: $entries[self.getIndex()!].entryRating, formatter: self.getNumberFormatter())
-                        .foregroundStyle(.white)
-                        .background(.blue)
+                        .padding(.horizontal)
+                        .foregroundStyle(.secondary)
                         .keyboardType(.decimalPad)
                     Spacer()
                     
