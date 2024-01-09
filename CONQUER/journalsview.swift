@@ -84,6 +84,17 @@ struct journalsview: View {
             self.todaysRating = entries[self.getIndex()!].entryRating!
         } )
         
+        .onDisappear(perform: {
+            self.entries[self.getIndex()!].journals = journals.filter { journal in
+                if (journal.journalText == "" && journal.journalTitle == "") {
+                    return false
+                } else {
+                    return true
+                }
+            }
+            try? ourModelContext.save()
+        }
+        )
     }
 
     func addJournal() {
