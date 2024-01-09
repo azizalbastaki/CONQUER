@@ -12,6 +12,7 @@ struct journalsview: View {
     var ourModelContext: ModelContext
     @State var entries: [Item]
     @State var journals: [journal] = []
+    @State var todaysRating: Double = 6.0
     var body: some View {
         NavigationStack {
             VStack {
@@ -31,10 +32,21 @@ struct journalsview: View {
                 
                 HStack {
                     Text("Your rating for today: ")
-                    TextField("Rate your Day", value: $entries[self.getIndex()!].entryRating, formatter: self.getNumberFormatter())
+                    TextField("Rate your Day", value: $todaysRating, formatter: self.getNumberFormatter())
                         .padding(.horizontal)
                         .foregroundStyle(.secondary)
                         .keyboardType(.decimalPad)
+                        .onChange(of: self.todaysRating, {
+                            if (self.todaysRating <= 0) {
+                                self.todaysRating = 0.1
+                            }
+                            else if (self.todaysRating >= 10.0) {
+                                self.todaysRating = 9.9
+                            }
+                            self.entries[self.getIndex()!].entryRating = self.todaysRating
+                            try? ourModelContext.save()
+                        }
+                        )
                     Spacer()
                     
                 }
@@ -59,6 +71,7 @@ struct journalsview: View {
             journals = getJournals()
             print("CALLED")
             print(getJournals())
+            self.todaysRating = entries[self.getIndex()!].entryRating!
         } )
         
     }
