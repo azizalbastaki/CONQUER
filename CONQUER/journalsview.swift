@@ -21,13 +21,20 @@ struct journalsview: View {
                         .font(.title)
                         .padding(.horizontal)
                         .bold()
-                    Spacer()
-                }
-                HStack {
                     Text(getTodaysDate())
                         .font(.subheadline)
                         .padding(.horizontal)
                         .bold()
+                    Spacer()
+
+                }
+                HStack {
+                    Spacer()
+                    Button(action: {self.addJournal()}, label: {
+                        Text("+")
+                            .padding(.trailing)
+                            .font(.system(size: 25))
+                    })
                 }
                 
                 HStack {
@@ -49,20 +56,23 @@ struct journalsview: View {
                         )
                     Spacer()
                     
+                    
                 }
                 .padding()
                 
                 ScrollView {
                     
-                    ForEach($journals) { $journal in
+                    ForEach(self.$journals) { $journal in
                         TextField("What is the title of your entry?", text: $journal.journalTitle)
                             .bold()
                         TextField("Start writing here...", text: $journal.journalText)
+                            .padding(.bottom)
                     }
                     .padding()
                     .onChange(of: self.journals, {
                         self.entries[self.getIndex()!].journals = self.journals
                         try? ourModelContext.save()
+
                     })
                 }
             }
@@ -76,6 +86,12 @@ struct journalsview: View {
         
     }
 
+    func addJournal() {
+        self.entries[self.getIndex()!].journals?.append(journal(journalTitle: "", journalText: ""))
+        try? ourModelContext.save()
+        journals = getJournals()
+
+    }
     
     func getJournals() -> [journal] {
         return self.entries[self.getIndex()!].journals!
