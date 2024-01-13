@@ -10,7 +10,8 @@ import SwiftData
 import SwiftUI
 
 @Model
-final class Item {
+final class Item: Equatable {
+    let id = UUID()
     var timestamp: String?
     var itemType: ItemType?
     var journals: [journal]?
@@ -22,6 +23,10 @@ final class Item {
         self.tasks = []
         self.journals = []
         self.entryRating = 6.0
+    }
+    
+    static func ==(lhs: Item, rhs: Item) -> Bool {
+        return lhs.id == rhs.id && lhs.timestamp == rhs.timestamp && lhs.itemType == rhs.itemType && lhs.tasks == rhs.tasks
     }
 }
 
