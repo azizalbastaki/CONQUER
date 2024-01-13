@@ -17,7 +17,8 @@ struct todaystodoview: View {
     var toggleTask: (String, UUID) -> Bool
     var toggleSubTask: (String, UUID, UUID) -> Bool
     //var deleteTodo: (IndexSet) -> Void
-    @State var subtasks: [SubTask] = [SubTask(taskText: "")]
+    @State var newInstruction: String = ""
+    @State var subtasks: [SubTask] = []
     @State var taskTitle = ""
     @State var taskDescription = ""
     @State var taskDuration = 30
@@ -75,17 +76,24 @@ struct todaystodoview: View {
                                 
                                 Section("Sub Instructions - break the task down") {
                                     List {
-                                        ForEach(self.$subtasks) { $subtask in
-                                            TextField("Keep it small and concise", text: $subtask.taskText)
+                                        ForEach(self.$subtasks, id: \.self) { $subtask in
+                                            Text($subtask.taskText.wrappedValue)
                                         }
                                         .onDelete(perform: deleteSubtask)
+                                        HStack {
+                                            TextField("Keep it small and concise", text: $newInstruction)
+                                            
+                                            Button(action: {
+                                                self.subtasks.append(SubTask(taskText: self.newInstruction))
+                                                self.newInstruction = ""
+                                            }, label: {
+                                                Text("Add")
+                                                    .padding(.trailing)
+                                                
+                                            })
+                                        }
                                     }
-                                    
-                                    Button(action: {self.subtasks.append(SubTask(taskText: ""))}, label: {
-                                        Text("Add New Instruction")
-                                            .padding(.trailing)
-                                        
-                                    })
+
                                 }
                                 
                                 Button(action: {
@@ -93,11 +101,12 @@ struct todaystodoview: View {
                                     dateFormatter.dateFormat = "HHmm"
                                     dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                                     let timeAsString = dateFormatter.string(from: self.timeSelected)
+                                    self.newInstruction = ""
                                     self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag, subtasks, Int(timeAsString)!)
                                     self.taskTitle = ""
                                     self.taskDescription = ""
                                     self.taskDuration = 30
-                                    self.subtasks = [SubTask(taskText: "")]
+                                    self.subtasks = []
                                     self.taskTag = ""
                                     
                                 },
@@ -126,8 +135,8 @@ struct todaystodoview: View {
                         todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration, taskDescription: entry.taskDescription, taskInstructions: entry.subTasks, todoComplete: entry.completed, todoUUID: entry.id, toggleFunction: self.toggleTask,toggleSubtaskFunction: self.toggleSubTask, timestamp: getDateAsString(dateObject: date), taskPriority: entry.taskPriority)
                     }
                     .onDelete(perform: deleteTodo)
-                    
                 }
+                
             }
         }
     }
