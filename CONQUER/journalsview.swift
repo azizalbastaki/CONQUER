@@ -21,14 +21,7 @@ struct journalsview: View {
                         .font(.title)
                         .padding(.horizontal)
                         .bold()
-                    Text(getTodaysDate())
-                        .font(.subheadline)
-                        .padding(.horizontal)
-                        .bold()
-                    Spacer()
-
-                }
-                HStack {
+                    
                     Spacer()
                     Button(action: {self.addJournal()}, label: {
                         Text("+")
@@ -36,7 +29,14 @@ struct journalsview: View {
                             .font(.system(size: 25))
                     })
                 }
-                
+                HStack {
+                    Text(getTodaysDate())
+                        .font(.subheadline)
+                        .bold()
+                        .minimumScaleFactor(0.01)
+                        .padding(.horizontal)
+                    Spacer()
+                }
                 HStack {
                     Text("Your rating for today: ")
                     TextField("Rate your Day", value: $todaysRating, formatter: self.getNumberFormatter())
@@ -58,8 +58,8 @@ struct journalsview: View {
                     
                     
                 }
-                .padding()
-                
+                .padding(.horizontal)
+
                 ScrollView {
                     
                     ForEach(self.$journals) { $journal in
@@ -72,12 +72,12 @@ struct journalsview: View {
                     .onChange(of: self.journals, {
                         self.entries[self.getIndex()!].journals = self.journals
                         try? ourModelContext.save()
-
+                        
                     })
                 }
             }
         }
-        .onAppear( perform: { 
+        .onAppear( perform: {
             journals = getJournals()
             print("CALLED")
             print(getJournals())
@@ -96,12 +96,12 @@ struct journalsview: View {
         }
         )
     }
-
+    
     func addJournal() {
         self.entries[self.getIndex()!].journals?.append(journal(journalTitle: "", journalText: ""))
         try? ourModelContext.save()
         journals = getJournals()
-
+        
     }
     
     func getJournals() -> [journal] {
