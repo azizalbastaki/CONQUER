@@ -25,16 +25,21 @@ struct journalsview: View {
                     Spacer()
                     
                     NavigationLink {
-                        
+                        Text("Past Entries")
+                            .font(.title)
+                            .bold()
+                            .padding()
                         List {
                             ForEach(self.getPastJournals()) { oldJournal in
                                 NavigationLink {
                                     VStack{
                                         Text(oldJournal.journalTitle)
                                             .font(.title)
-                                            .padding(.horizontal)
+                                            .padding()
                                             .bold()
                                         Text(oldJournal.journalText)
+                                            .padding()
+                                        Spacer()
                                     }
                                 } label: {
                                     HStack {
