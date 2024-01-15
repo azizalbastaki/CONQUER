@@ -95,7 +95,7 @@ struct ContentView: View {
             if (dayOfTheWeek == items[0].timestamp) {
                 newEntry.journals!.append(journal(journalTitle: "Reflect on your To-Be list", journalText: "*ADD TO-BEs HERE*"))
             }
-            newEntry.journals!.append(journal(journalTitle: "What happened today?", journalText: ""))
+            newEntry.journals!.append(journal(journalTitle: "What happened today? - \(getDateAsShortString(dateObject: getDateFromString(dateString: day)))", journalText: ""))
             
             var dayOfTheWeekEnum = RoutineSetting.daily
             
@@ -201,6 +201,12 @@ func getTodaysDate() -> String {
 func getDateAsString(dateObject: Date) -> String {
     let formatter = DateFormatter()
     formatter.dateStyle = .full
+    return formatter.string(from: dateObject)
+}
+
+func getDateAsShortString(dateObject: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .short
     return formatter.string(from: dateObject)
 }
 
