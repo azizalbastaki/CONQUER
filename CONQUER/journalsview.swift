@@ -97,8 +97,9 @@ struct journalsview: View {
                     ForEach(self.$journals) { $journal in
                         TextField("What is the title of your entry?", text: $journal.journalTitle)
                             .bold()
-                        TextField("Start writing here...", text: $journal.journalText)
+                        TextField("Start writing here...", text: $journal.journalText, axis: .vertical)
                             .padding(.bottom)
+                        
                     }
                     .padding()
                     .onChange(of: self.journals, {
