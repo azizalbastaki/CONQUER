@@ -48,7 +48,7 @@ struct ContentView: View {
             modelContext.insert(projectlist)
             modelContext.insert(taglist)
             try? modelContext.save()
-            addNewEntry(day: getTodaysDate())
+            //addNewEntry(day: getTodaysDate())
 
         }
     }
