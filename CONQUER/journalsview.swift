@@ -52,6 +52,7 @@ struct journalsview: View {
                         
                     } label: {
                         Image(systemName: "book.pages.fill")
+                            .padding(.horizontal)
                     }
                     
                     Button(action: {self.addJournal()}, label: {
