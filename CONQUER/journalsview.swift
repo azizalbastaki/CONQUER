@@ -23,6 +23,32 @@ struct journalsview: View {
                         .bold()
                     
                     Spacer()
+                    
+                    NavigationLink {
+                        
+                        List {
+                            ForEach(self.getPastJournals()) { oldJournal in
+                                NavigationLink {
+                                    VStack{
+                                        Text(oldJournal.journalTitle)
+                                            .font(.title)
+                                            .padding(.horizontal)
+                                            .bold()
+                                        Text(oldJournal.journalText)
+                                    }
+                                } label: {
+                                    HStack {
+                                        Text(oldJournal.journalTitle)
+                                        Spacer()
+                                    }
+                                }
+                            }
+                        }
+                        
+                    } label: {
+                        Image(systemName: "book.pages.fill")
+                    }
+                    
                     Button(action: {self.addJournal()}, label: {
                         Text("+")
                             .padding(.trailing)
@@ -59,7 +85,7 @@ struct journalsview: View {
                     
                 }
                 .padding(.horizontal)
-
+                
                 ScrollView {
                     
                     ForEach(self.$journals) { $journal in
@@ -95,6 +121,41 @@ struct journalsview: View {
             try? ourModelContext.save()
         }
         )
+    }
+    
+    func getPastJournals() -> [journal] {
+        var journalsCollected: [journal] = []
+        var entriesToQueryJournals = entries
+
+        entriesToQueryJournals = entriesToQueryJournals.filter { entryInstance in
+            if (entryInstance.itemType != .dailyEntry) {
+                return false
+            }
+            else {
+                if (getDateFromString(dateString:entryInstance.timestamp!) > getDateFromString(dateString: getTodaysDate())) {
+                    return false
+                }
+                
+                else {
+                    return true
+                }
+            }
+            
+        }
+        
+        entriesToQueryJournals = entriesToQueryJournals.sorted { entry1, entry2 in
+            getDateFromString(dateString: entry1.timestamp!) > getDateFromString(dateString: entry2.timestamp!)
+        }
+        
+        for entry in entriesToQueryJournals {
+            if (entry.timestamp != getTodaysDate()) {
+                for journal in entry.journals! {
+                    journalsCollected.append(journal)
+                }
+            }
+        }
+        
+        return journalsCollected
     }
     
     func addJournal() {
