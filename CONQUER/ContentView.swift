@@ -18,7 +18,7 @@ struct ContentView: View {
                 .tabItem { Label("Today's Tasks", systemImage: "dot.scope") }
             journalsview(ourModelContext: modelContext, entries: items)
                 .tabItem { Label("Journal", systemImage: "book.fill") }
-            Text("Projects")
+            projectview()
                 .tabItem { Label("Projects", systemImage: "hammer.fill") }
             settingsview(ourModelContext: modelContext, initalizeConquer: self.initializeConquer)
                 .tabItem { Label("Settings", systemImage: "gear") }

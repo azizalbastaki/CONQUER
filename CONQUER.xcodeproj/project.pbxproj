@@ -18,6 +18,7 @@
 		CE2CA3002B4056B1003CAFD7 /* CONQUERUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2CA2FF2B4056B1003CAFD7 /* CONQUERUITests.swift */; };
 		CE2CA3022B4056B1003CAFD7 /* CONQUERUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2CA3012B4056B1003CAFD7 /* CONQUERUITestsLaunchTests.swift */; };
 		CE2CA30F2B4066B1003CAFD7 /* todaystodoview.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2CA30E2B4066B1003CAFD7 /* todaystodoview.swift */; };
+		CE4498732B564B54005AC5BB /* projectview.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4498722B564B54005AC5BB /* projectview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		CE2CA2FF2B4056B1003CAFD7 /* CONQUERUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CONQUERUITests.swift; sourceTree = "<group>"; };
 		CE2CA3012B4056B1003CAFD7 /* CONQUERUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CONQUERUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CE2CA30E2B4066B1003CAFD7 /* todaystodoview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = todaystodoview.swift; sourceTree = "<group>"; };
+		CE4498722B564B54005AC5BB /* projectview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				CE2CA30E2B4066B1003CAFD7 /* todaystodoview.swift */,
 				CE0465A52B43F82700871F67 /* settingsview.swift */,
 				CE0465A72B4729CA00871F67 /* journalsview.swift */,
+				CE4498722B564B54005AC5BB /* projectview.swift */,
 			);
 			path = CONQUER;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 			files = (
 				CE0465A82B4729CA00871F67 /* journalsview.swift in Sources */,
 				CE2CA30F2B4066B1003CAFD7 /* todaystodoview.swift in Sources */,
+				CE4498732B564B54005AC5BB /* projectview.swift in Sources */,
 				CE0465A62B43F82700871F67 /* settingsview.swift in Sources */,
 				CE2CA2E32B4056B0003CAFD7 /* ContentView.swift in Sources */,
 				CE2CA2E52B4056B0003CAFD7 /* Item.swift in Sources */,
