@@ -27,6 +27,7 @@ import SwiftData
 struct settingsview: View {
     var ourModelContext: ModelContext
     var initalizeConquer: () -> Void
+    @State var entries: [Item]
     var body: some View {
         NavigationStack {
             VStack {
@@ -40,7 +41,18 @@ struct settingsview: View {
                 List {
                     Section("Ratings") {
                         NavigationLink {
-                            Text("")
+                            ForEach(self.getRatings(), id: \.self) { rating in
+                                HStack {
+                                    Text(rating.timestamp)
+                                        .padding(.horizontal)
+                                    Spacer()
+                                    Text(String(rating.rating))
+                                        .padding([.horizontal], 30)
+                                }
+                                
+                            }
+                            .padding()
+                            Spacer()
                         } label: {
                             Text("View ratings from past days")
                         }
@@ -65,13 +77,41 @@ struct settingsview: View {
         }
     }
     
-    func getRatings() {
-        //
+    func getBgColor(dayRating: Double) -> Color {
+        if (0.00...4.00 ~= dayRating) {
+            return .red
+        }
+        else if (6.01...8.99 ~= dayRating) {
+            return .green
+        }
+        
+        else if (dayRating > 8.99) {
+            return .blue
+        }
+        else {
+            return .orange
+        }
+    }
+    
+    func getRatings() -> [ratingItem] {
+        var ratings: [ratingItem] = []
+        for entry in entries {
+            if (entry.itemType == .dailyEntry) {
+                ratings.append(ratingItem(rating: entry.entryRating ?? 6.0, timestamp: entry.timestamp!))
+            }
+        }
+        
+        ratings = ratings.sorted { rating1, rating2 in
+            getDateFromString(dateString: rating1.timestamp) > getDateFromString(dateString: rating2.timestamp)
+        }
+        
+        return ratings
     }
     
 }
 
-struct ratingItem {
+struct ratingItem: Hashable {
+    var id = UUID()
     var rating: Double
     var timestamp : String
     
