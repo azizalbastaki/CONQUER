@@ -20,7 +20,7 @@ struct ContentView: View {
                 .tabItem { Label("Journal", systemImage: "book.fill") }
 //            projectview()                 *** PROJECTS TO BE ADDED POST RELEASE ***
 //                .tabItem { Label("Projects", systemImage: "hammer.fill") }
-            settingsview(ourModelContext: modelContext, initalizeConquer: self.initializeConquer)
+            settingsview(ourModelContext: modelContext, initalizeConquer: self.initializeConquer, entries: items)
                 .tabItem { Label("Settings", systemImage: "gear") }
         }
         .onAppear(perform: {initializeConquer()})
