@@ -8,14 +8,11 @@
 /*
  //
  ** TO DO LIST **
- Add To Be List
- Add To Be List Journal option
+ Add To Be List Journal option (day of week)
  Add routines and their options
- Turn this into a navigation stack
- View Past ratings system
  Add option to export all date into
  
- ** POST RELEASE LIST **
+ ** POST RELEASE TODO LIST **
  
  -Delete old entries
  -Change theme
@@ -27,6 +24,10 @@ import SwiftData
 struct settingsview: View {
     var ourModelContext: ModelContext
     var initalizeConquer: () -> Void
+    @State var showAlert: Bool = false
+    @State var addToBeTitle = ""
+    @State var addToBeDesc = ""
+    @State var tobes: [journal] = []
     @State var entries: [Item]
     var body: some View {
         NavigationStack {
@@ -48,6 +49,7 @@ struct settingsview: View {
                                     Spacer()
                                     Text(String(rating.rating))
                                         .padding([.horizontal], 30)
+                                        .background(self.getBgColor(dayRating: rating.rating))
                                 }
                                 
                             }
@@ -59,6 +61,45 @@ struct settingsview: View {
                         
                     }
                     
+                    Section("To Be List") {
+                        ForEach(self.$tobes, id: \.self) { $toBe in
+                            Text(toBe.journalTitle)
+                            
+                        }
+                        .onDelete(perform: deleteToBe)
+                        
+                        
+                        Button("Add Trait") {
+                            showAlert = true
+                        }
+                        .alert("Add New Trait", isPresented: $showAlert, actions: {
+                            TextField("To Be Title", text: $addToBeTitle)
+                            TextField("Elaborate", text: $addToBeDesc)
+                            
+                            Button("Add", action: {
+                                tobes.append(journal(journalTitle: addToBeTitle, journalText: addToBeDesc))
+                                self.addToBeTitle = ""
+                                self.addToBeDesc = ""
+                                self.showAlert = false
+                            })
+                            
+                            Button("Cancel", role: .cancel, action: {
+                                self.addToBeDesc = ""
+                                self.addToBeTitle = ""
+                                self.showAlert = false
+                            })
+                        })
+                        
+                    }
+                    
+                    .onChange(of: self.tobes, {
+                        var tobeIndex = self.getToBeList()
+                        tobeIndex?.journals = self.tobes
+                        try? ourModelContext.save()
+                    })
+                    
+                    
+                    
                 }
                 
                 Text("Settings")
@@ -66,7 +107,13 @@ struct settingsview: View {
                     Text("Delete all data and crash")
                 })
             }
-        }
+        }.onAppear(perform: {
+            tobes = []
+            let listItem = self.getToBeList()
+            for toBe in listItem!.journals! {
+                tobes.append(journal(journalTitle: toBe.journalTitle, journalText: toBe.journalText))
+            }
+        })
     }
     func deletething() {
         do {
@@ -108,6 +155,19 @@ struct settingsview: View {
         return ratings
     }
     
+    func getToBeList() -> Item? {
+        for itemObject in self.entries {
+            if (itemObject.itemType == .tobelist) {
+                return itemObject
+            }
+        }
+        return nil
+    }
+    
+    func deleteToBe(at offsets: IndexSet) {
+        tobes.remove(atOffsets: offsets)
+    }
+    
 }
 
 struct ratingItem: Hashable {
@@ -120,6 +180,7 @@ struct ratingItem: Hashable {
         self.timestamp = timestamp
     }
 }
+
 
 //
 //#Preview {
