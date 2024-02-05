@@ -29,6 +29,8 @@ struct settingsview: View {
     @State var addToBeDesc = ""
     @State var tobes: [journal] = []
     @State var entries: [Item]
+    var weeklyoptions = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Every day"]
+    @State var selectedToBeDay = "Every day"
     var body: some View {
         NavigationStack {
             VStack {
@@ -97,6 +99,14 @@ struct settingsview: View {
                         tobeIndex?.journals = self.tobes
                         try? ourModelContext.save()
                     })
+                    
+                    Section("Journalling") {
+                        Picker("Review To-Be List On", selection: $selectedToBeDay) {
+                            ForEach(weeklyoptions, id: \.self) {
+                                Text($0)
+                            }
+                        }
+                    }
                     
                     
                     

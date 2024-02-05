@@ -92,7 +92,7 @@ struct ContentView: View {
             print("AND we're adding its components too!")
             
             let dayOfTheWeek = day.components(separatedBy: ",")[0]
-            if (dayOfTheWeek == items[0].timestamp) {
+            if (dayOfTheWeek == items[0].timestamp) || (items[0].timestamp == "Every day"){
                 newEntry.journals!.append(journal(journalTitle: "Reflect on your To-Be list", journalText: "*ADD TO-BEs HERE*"))
             }
             newEntry.journals!.append(journal(journalTitle: "What happened today? - \(getDateAsShortString(dateObject: getDateFromString(dateString: day)))", journalText: ""))
