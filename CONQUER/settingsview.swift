@@ -8,7 +8,6 @@
 /*
  //
  ** TO DO LIST **
- Add To Be List Journal option (day of week)
  Add routines and their options
  Add option to export all date into
  
@@ -101,11 +100,17 @@ struct settingsview: View {
                     })
                     
                     Section("Journalling") {
-                        Picker("Review To-Be List On", selection: $selectedToBeDay) {
+                        Picker("Review To-be list on", selection: $selectedToBeDay) {
                             ForEach(weeklyoptions, id: \.self) {
                                 Text($0)
                             }
                         }
+                        
+                        .onChange(of: self.selectedToBeDay, {
+                            var tobeIndex = self.getToBeList()
+                            tobeIndex?.timestamp = self.selectedToBeDay
+                            try? ourModelContext.save()
+                        })
                     }
                     
                     
@@ -123,6 +128,9 @@ struct settingsview: View {
             for toBe in listItem!.journals! {
                 tobes.append(journal(journalTitle: toBe.journalTitle, journalText: toBe.journalText))
             }
+            
+            self.selectedToBeDay = (self.getToBeList()?.timestamp)!
+            
         })
     }
     func deletething() {
