@@ -65,6 +65,20 @@ struct ToDoTask: Hashable, Codable, Identifiable {
     var routineSetting: RoutineSetting
 }
 
-enum RoutineSetting: Hashable, Codable {
+enum RoutineSetting: Hashable, Codable, CustomStringConvertible {
     case daily, monday, tuesday, wednesday, thursday, friday, saturday, sunday, none
+    
+    var description : String {
+        switch self {
+        case .daily: return "Every day"
+        case .monday: return "Monday"
+        case .tuesday: return "Tuesday"
+        case .wednesday: return "Wednesday"
+        case .thursday: return "Thursday"
+        case .friday: return "Friday"
+        case .saturday: return "Saturday"
+        case .sunday: return "Sunday"
+        case .none: return "Never"
+        }
+    }
 }
