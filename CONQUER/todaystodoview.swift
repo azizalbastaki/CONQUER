@@ -21,7 +21,7 @@ struct todaystodoview: View {
     @State var subtasks: [SubTask] = []
     @State var taskTitle = ""
     @State var taskDescription = ""
-    @State var taskDuration = 30
+    @State var taskDuration = 10
     @State var date = Date.now
     @State var taskTag = ""
     @State var timeSelected = Date.now
@@ -105,7 +105,7 @@ struct todaystodoview: View {
                                     self.addFunction(taskTitle, date, taskDuration,taskDescription, taskTag, subtasks, Int(timeAsString)!)
                                     self.taskTitle = ""
                                     self.taskDescription = ""
-                                    self.taskDuration = 30
+                                    self.taskDuration = 10
                                     self.subtasks = []
                                     self.taskTag = ""
                                     
