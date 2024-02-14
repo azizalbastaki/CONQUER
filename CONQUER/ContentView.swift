@@ -14,13 +14,13 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            todaystodoview(ourModelContext: modelContext, entries: items, addFunction: self.addToDoTask, initializeConquer: self.initializeConquer, addEntry: self.addNewEntry, toggleTask: self.toggleTask, toggleSubTask: self.toggleSubTask)
+            todaystodoview(ourModelContext: modelContext, entries: items, addFunction: self.addToDoTask, initializeConquer: self.initializeConquer, addEntry: self.addNewEntry, toggleTask: self.toggleTask, toggleSubTask: self.toggleSubTask, getEntries: self.getItems)
                 .tabItem { Label("Today's Tasks", systemImage: "dot.scope") }
             journalsview(ourModelContext: modelContext, entries: items)
                 .tabItem { Label("Journal", systemImage: "book.fill") }
 //            projectview()                 *** PROJECTS TO BE ADDED POST RELEASE ***
 //                .tabItem { Label("Projects", systemImage: "hammer.fill") }
-            settingsview(ourModelContext: modelContext, initalizeConquer: self.initializeConquer, entries: items)
+            settingsview(ourModelContext: modelContext, initalizeConquer: self.initializeConquer, getEntries: self.getItems, entries: items)
                 .tabItem { Label("Settings", systemImage: "gear") }
         }
         .onAppear(perform: {initializeConquer()})
@@ -82,6 +82,7 @@ struct ContentView: View {
             
         }
     }
+    
     
     func addNewEntry(day: String) -> Item {
         print("New Entry Being Added!")
