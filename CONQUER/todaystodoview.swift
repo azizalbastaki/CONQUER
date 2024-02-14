@@ -10,13 +10,14 @@ import SwiftData
 
 struct todaystodoview: View {
     var ourModelContext: ModelContext
-    var entries: [Item]
+    @State var entries: [Item]
     var addFunction: (String, Date, Int, String, String, [SubTask], Int) -> Void
     var initializeConquer: () -> Void
     var addEntry: (String) -> Item
     var toggleTask: (String, UUID) -> Bool
     var toggleSubTask: (String, UUID, UUID) -> Bool
-    //var deleteTodo: (IndexSet) -> Void
+    var getEntries: () -> [Item]
+
     @State var newInstruction: String = ""
     @State var subtasks: [SubTask] = []
     @State var taskTitle = ""
@@ -131,7 +132,7 @@ struct todaystodoview: View {
                 }
                 .padding(.horizontal)
                 List {
-                    ForEach(getDaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks!) { entry in
+                    ForEach(getDaysEntry(items: self.getEntries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry).tasks!) { entry in
                         todoRow(taskTitle: entry.taskTitle, tagTitle: entry.tag, duration: entry.duration, taskDescription: entry.taskDescription, taskInstructions: entry.subTasks, todoComplete: entry.completed, todoUUID: entry.id, toggleFunction: self.toggleTask,toggleSubtaskFunction: self.toggleSubTask, timestamp: getDateAsString(dateObject: date), taskPriority: entry.taskPriority)
                     }
                     .onDelete(perform: deleteTodo)
@@ -139,22 +140,26 @@ struct todaystodoview: View {
                 
             }
         }
+        .onAppear(perform: {
+            self.entries = self.getEntries()
+
+        })
     }
     
     func deleteTodo(at offset: IndexSet) {
-        self.entries[self.entries.firstIndex(of: getDaysEntry(items: entries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry))!].tasks?.remove(atOffsets: offset)
+        self.entries[self.entries.firstIndex(of: getDaysEntry(items: self.getEntries, initializeFunc: self.initializeConquer, newEntryFunc: self.addEntry))!].tasks?.remove(atOffsets: offset)
         try? ourModelContext.save()
     }
     
     
-    func getDaysEntry(items: [Item], initializeFunc: () -> Void, newEntryFunc: (String) -> Item) -> Item {
+    func getDaysEntry(items: ()->[Item], initializeFunc: () -> Void, newEntryFunc: (String) -> Item) -> Item {
         let dateWanted = getDateAsString(dateObject: date)
         if (searchForEntry(items: items, entryTimestamp: dateWanted) != nil) {
             return searchForEntry(items: items, entryTimestamp: dateWanted)!
         }
         
         else {
-            if (items.count == 0) {
+            if (items().count == 0) {
                 initializeFunc()
             }
             return newEntryFunc(dateWanted)
@@ -162,8 +167,8 @@ struct todaystodoview: View {
         }
     }
     
-    func searchForEntry(items: [Item], entryTimestamp: String) -> Item? {
-        for item in items {
+    func searchForEntry(items: ()-> [Item], entryTimestamp: String) -> Item? {
+        for item in items() {
             if (item.timestamp == entryTimestamp) {
                 return item
             }
