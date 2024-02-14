@@ -23,6 +23,7 @@ import SwiftData
 struct settingsview: View {
     var ourModelContext: ModelContext
     var initalizeConquer: () -> Void
+    var getEntries: () -> [Item]
     @State var showAlert: Bool = false
     @State var addToBeTitle = ""
     @State var addToBeDesc = ""
@@ -213,6 +214,11 @@ struct settingsview: View {
                                          -Item must be an entry of today's date OR one from a future date
                                          */
                                         
+                                        if entry.itemType == .dailyEntry {
+                                            print(getDateFromString(dateString: entry.timestamp!))
+                                            print(Date.now)
+                                            print()
+                                        }
                                         if (entry.itemType == .dailyEntry) &&
                                             ((entry.timestamp!.components(separatedBy: ",")[0] == self.dayOfWeek.description) || self.dayOfWeek == RoutineSetting.daily) &&
                                             (entry.timestamp! == getTodaysDate() || getDateFromString(dateString: entry.timestamp!) > Date.now)
@@ -257,6 +263,7 @@ struct settingsview: View {
                     //                    })
                 }
             }.onAppear(perform: {
+                self.entries = self.getEntries()
                 tobes = []
                 let listItem = self.getToBeList()
                 for toBe in listItem!.journals! {
