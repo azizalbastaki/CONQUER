@@ -58,6 +58,7 @@ struct settingsview: View {
                 List {
                     Section("Ratings") {
                         NavigationLink {
+                            ScrollView {
                             ForEach(self.getRatings(), id: \.self) { rating in
                                 HStack {
                                     Text(rating.timestamp)
@@ -69,8 +70,8 @@ struct settingsview: View {
                                 }
                                 
                             }
+                        }
                             .padding()
-                            Spacer()
                         } label: {
                             Text("View ratings from past days")
                         }
