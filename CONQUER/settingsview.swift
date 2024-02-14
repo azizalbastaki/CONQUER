@@ -82,7 +82,20 @@ struct settingsview: View {
                     
                     Section("To Be List") {
                         ForEach(self.$tobes, id: \.self) { $toBe in
-                            Text(toBe.journalTitle)
+                            
+                            NavigationLink {
+                                Text(toBe.journalTitle)
+                                    .font(.title)
+                                    .bold()
+                                    .padding()
+                                Text(toBe.journalText)
+                                    .padding()
+                                Spacer()
+                                    
+                            }
+                            label : {
+                                Text(toBe.journalTitle)
+                            }
                             
                         }
                         .onDelete(perform: deleteToBe)
