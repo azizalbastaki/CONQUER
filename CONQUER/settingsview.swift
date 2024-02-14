@@ -60,16 +60,17 @@ struct settingsview: View {
                     Section("Ratings") {
                         NavigationLink {
                             ScrollView {
-                            ForEach(self.getRatings(), id: \.self) { rating in
-                                HStack {
-                                    Text(rating.timestamp)
-                                        .padding(.horizontal)
-                                    Spacer()
-                                    Text(String(rating.rating))
-                                        .padding([.horizontal], 30)
-                                        .background(self.getBgColor(dayRating: rating.rating))
-                                }
-                                
+                                ForEach(self.getRatings(), id: \.self) { rating in
+                                    if (getDateFromString(dateString: rating.timestamp) <= Date.now) {
+                                        HStack {
+                                            Text(rating.timestamp)
+                                                .padding(.horizontal)
+                                            Spacer()
+                                            Text(String(rating.rating))
+                                                .padding([.horizontal], 30)
+                                                .background(self.getBgColor(dayRating: rating.rating))
+                                        }
+                                    }
                             }
                         }
                             .padding()
