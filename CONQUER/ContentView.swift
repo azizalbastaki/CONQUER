@@ -16,7 +16,7 @@ struct ContentView: View {
         TabView {
             todaystodoview(ourModelContext: modelContext, entries: items, addFunction: self.addToDoTask, initializeConquer: self.initializeConquer, addEntry: self.addNewEntry, toggleTask: self.toggleTask, toggleSubTask: self.toggleSubTask, getEntries: self.getItems)
                 .tabItem { Label("Today's Tasks", systemImage: "dot.scope") }
-            journalsview(ourModelContext: modelContext, entries: items)
+            journalsview(ourModelContext: modelContext, entries: items, getEntries: self.getItems)
                 .tabItem { Label("Journal", systemImage: "book.fill") }
 //            projectview()                 *** PROJECTS TO BE ADDED POST RELEASE ***
 //                .tabItem { Label("Projects", systemImage: "hammer.fill") }
@@ -93,9 +93,9 @@ struct ContentView: View {
             print("AND we're adding its components too!")
             
             let dayOfTheWeek = day.components(separatedBy: ",")[0]
-            if (dayOfTheWeek == items[0].timestamp) || (items[0].timestamp == "Every day"){
-                newEntry.journals!.append(journal(journalTitle: "Reflect on your To-Be list", journalText: "*ADD TO-BEs HERE*"))
-            }
+//            if (dayOfTheWeek == items[0].timestamp) || (items[0].timestamp == "Every day"){
+//                newEntry.journals!.append(journal(journalTitle: "Reflect on your To-Be list", journalText: "*ADD TO-BEs HERE*"))
+//            }
             newEntry.journals!.append(journal(journalTitle: "What happened today? - \(getDateAsShortString(dateObject: getDateFromString(dateString: day)))", journalText: ""))
             
             var dayOfTheWeekEnum = RoutineSetting.daily

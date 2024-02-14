@@ -13,6 +13,8 @@ struct journalsview: View {
     @State var entries: [Item]
     @State var journals: [journal] = []
     @State var todaysRating: Double = 6.0
+    var getEntries: () -> [Item]
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -115,6 +117,19 @@ struct journalsview: View {
             print("CALLED")
             print(getJournals())
             self.todaysRating = entries[self.getIndex()!].entryRating!
+            
+            if (self.getToBesItem().timestamp == getTodaysDate().components(separatedBy: ",")[0]) || (self.getToBesItem().timestamp == "Every day") {
+                var containsToBeReflection = false
+                for journal in journals {
+                    if journal.journalTitle.contains("To Be List Reflection -") {
+                        containsToBeReflection = true
+                    }
+                }
+                
+                if (containsToBeReflection == false) {
+                    self.addReflectionJournal()
+                }
+            }
         } )
         
         .onDisappear(perform: {
@@ -172,13 +187,43 @@ struct journalsview: View {
         
     }
     
+    func addReflectionJournal() {
+        self.entries[self.getIndex()!].journals?.append(journal(journalTitle: "To Be List Reflection - \(getDateAsShortString(dateObject: Date.now))", journalText: self.getToBes()))
+        try? ourModelContext.save()
+        journals = getJournals()
+    }
+    
+    func getToBesItem() -> Item {
+        var entrieslist = self.getEntries()
+        var tobearray = entrieslist.filter { entryItem in
+            if (entryItem.itemType == .tobelist) {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+        
+        return tobearray[0]
+    }
+    
+    func getToBes() -> String {
+        
+        var tobeString: String = "Write a reflection on your progress in achieving the following qualities: \n\n"
+        for tobe in self.getToBesItem().journals! {
+            tobeString = tobeString + tobe.journalTitle + " - \n\n"
+        }
+        return tobeString
+        
+    }
+    
     func getJournals() -> [journal] {
         return self.entries[self.getIndex()!].journals!
     }
     
     func getIndex() -> Int? {
         var index = 0
-        for entry in entries {
+        for entry in self.getEntries() {
             if (entry.timestamp == getTodaysDate()) {
                 return index
             }
