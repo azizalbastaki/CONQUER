@@ -43,7 +43,7 @@ struct settingsview: View {
     @State var timeSelected = Date.now
     @State var subtasks: [SubTask] = []
     @State var newInstruction: String = ""
-
+    
     
     var body: some View {
         NavigationStack {
@@ -212,9 +212,9 @@ struct settingsview: View {
                                          -Item must be an entry of today's date OR one from a future date
                                          */
                                         
-                                        if (entry.itemType == .dailyEntry &&
+                                        if (entry.itemType == .dailyEntry) &&
                                             ((entry.timestamp!.components(separatedBy: ",")[0] == self.dayOfWeek.description) || self.dayOfWeek == RoutineSetting.daily) &&
-                                            (entry.timestamp! == getTodaysDate() || getDateFromString(dateString: entry.timestamp!) > Date.now))
+                                            (entry.timestamp! == getTodaysDate() || getDateFromString(dateString: entry.timestamp!) > Date.now)
                                         {
                                             entry.tasks?.append(newTask)
                                         }
@@ -229,7 +229,7 @@ struct settingsview: View {
                                     self.getRoutineList()?.tasks?.append(newTask)
                                     
                                     try? ourModelContext.save()
-
+                                    
                                 },
                                        label: {
                                     HStack {
@@ -246,14 +246,14 @@ struct settingsview: View {
                         } label: {
                             Text("Add New Routine")
                                 .padding(.trailing)
-                                //.font(.system(size: 25))
+                            //.font(.system(size: 25))
                         }
                     }
-//
-//                    Text("Settings")
-//                    Button(action: deletething, label: {
-//                        Text("Delete all data and crash")
-//                    })
+                    //
+                    //                    Text("Settings")
+                    //                    Button(action: deletething, label: {
+                    //                        Text("Delete all data and crash")
+                    //                    })
                 }
             }.onAppear(perform: {
                 tobes = []
@@ -269,74 +269,74 @@ struct settingsview: View {
                 
             })
         }
+    }
+    func deletething() {
+        do {
+            try ourModelContext.delete(model: Item.self)
+            initalizeConquer()
+        } catch {
+            print("Could not delete.")
         }
-        func deletething() {
-            do {
-                try ourModelContext.delete(model: Item.self)
-                initalizeConquer()
-            } catch {
-                print("Could not delete.")
+    }
+    
+    func getBgColor(dayRating: Double) -> Color {
+        if (0.00...4.00 ~= dayRating) {
+            return .red
+        }
+        else if (6.01...8.99 ~= dayRating) {
+            return .green
+        }
+        
+        else if (dayRating > 8.99) {
+            return .blue
+        }
+        else {
+            return .orange
+        }
+    }
+    
+    func getRatings() -> [ratingItem] { // Filter out future ratings
+        var ratings: [ratingItem] = []
+        for entry in entries {
+            if (entry.itemType == .dailyEntry) {
+                ratings.append(ratingItem(rating: entry.entryRating ?? 6.0, timestamp: entry.timestamp!))
             }
         }
         
-        func getBgColor(dayRating: Double) -> Color {
-            if (0.00...4.00 ~= dayRating) {
-                return .red
-            }
-            else if (6.01...8.99 ~= dayRating) {
-                return .green
-            }
-            
-            else if (dayRating > 8.99) {
-                return .blue
-            }
-            else {
-                return .orange
-            }
+        ratings = ratings.sorted { rating1, rating2 in
+            getDateFromString(dateString: rating1.timestamp) > getDateFromString(dateString: rating2.timestamp)
         }
         
-        func getRatings() -> [ratingItem] { // Filter out future ratings
-            var ratings: [ratingItem] = []
+        return ratings
+    }
+    
+    func getToBeList() -> Item? {
+        for itemObject in self.entries {
+            if (itemObject.itemType == .tobelist) {
+                return itemObject
+            }
+        }
+        return nil
+    }
+    
+    func getRoutineList() -> Item? {
+        for itemObject in self.entries {
+            if (itemObject.itemType == .routines) {
+                return itemObject
+            }
+        }
+        return nil
+    }
+    
+    func deleteToBe(at offsets: IndexSet) {
+        tobes.remove(atOffsets: offsets)
+    }
+    
+    func deleteRoutine(at offsets: IndexSet) {
+        let routinesToDelete = offsets.map { self.routines[$0] }
+        for routine in routinesToDelete {
             for entry in entries {
                 if (entry.itemType == .dailyEntry) {
-                    ratings.append(ratingItem(rating: entry.entryRating ?? 6.0, timestamp: entry.timestamp!))
-                }
-            }
-            
-            ratings = ratings.sorted { rating1, rating2 in
-                getDateFromString(dateString: rating1.timestamp) > getDateFromString(dateString: rating2.timestamp)
-            }
-            
-            return ratings
-        }
-        
-        func getToBeList() -> Item? {
-            for itemObject in self.entries {
-                if (itemObject.itemType == .tobelist) {
-                    return itemObject
-                }
-            }
-            return nil
-        }
-        
-        func getRoutineList() -> Item? {
-            for itemObject in self.entries {
-                if (itemObject.itemType == .routines) {
-                    return itemObject
-                }
-            }
-            return nil
-        }
-        
-        func deleteToBe(at offsets: IndexSet) {
-            tobes.remove(atOffsets: offsets)
-        }
-        
-        func deleteRoutine(at offsets: IndexSet) {
-            let routinesToDelete = offsets.map { self.routines[$0] }
-            
-            for routine in routinesToDelete {
-                for entry in entries {
                     if ((routine.routineSetting == .daily) || (routine.routineSetting.description == entry.timestamp?.components(separatedBy: ",")[0])) &&
                         (entry.timestamp == getTodaysDate() || getDateFromString(dateString: entry.timestamp!) > Date.now)
                     {
@@ -345,15 +345,16 @@ struct settingsview: View {
                         }
                     }
                 }
-                getRoutineList()?.tasks?.remove(at: (getRoutineList()?.tasks?.firstIndex(of: routine))!)
             }
-            routines.remove(atOffsets: offsets)
-            try? ourModelContext.save()
+            getRoutineList()?.tasks?.remove(at: (getRoutineList()?.tasks?.firstIndex(of: routine))!)
         }
-        func deleteSubtask(at offsets: IndexSet) {
-            subtasks.remove(atOffsets: offsets)
-        }
-
+        routines.remove(atOffsets: offsets)
+        try? ourModelContext.save()
+    }
+    func deleteSubtask(at offsets: IndexSet) {
+        subtasks.remove(atOffsets: offsets)
+    }
+    
     
     struct ratingItem: Hashable {
         var id = UUID()
@@ -366,8 +367,8 @@ struct settingsview: View {
         }
     }
 }
-    
-    //
-    //#Preview {
-    //    settingsview()
-    //}
+
+//
+//#Preview {
+//    settingsview()
+//}

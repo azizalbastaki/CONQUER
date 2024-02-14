@@ -118,7 +118,7 @@ struct ContentView: View {
                 print("How did we get here? :3")
             }
         
-            for routine in items[1].tasks! {
+            for routine in self.getRoutineList().tasks! {
                 if (routine.routineSetting == .daily || routine.routineSetting == dayOfTheWeekEnum) {
                     newEntry.tasks!.append(routine)
                 }
@@ -186,6 +186,14 @@ struct ContentView: View {
             try? modelContext.save()
             return false
         }
+    }
+    
+    func getRoutineList() -> Item {
+        var index = 0
+        while (items[index].itemType != .routines) {
+            index = index + 1
+        }
+        return items[index]
     }
     
 }
