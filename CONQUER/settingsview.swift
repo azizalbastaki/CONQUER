@@ -215,9 +215,7 @@ struct settingsview: View {
                                          */
                                         
                                         if entry.itemType == .dailyEntry {
-                                            print(getDateFromString(dateString: entry.timestamp!))
-                                            print(Date.now)
-                                            print()
+
                                         }
                                         if (entry.itemType == .dailyEntry) &&
                                             ((entry.timestamp!.components(separatedBy: ",")[0] == self.dayOfWeek.description) || self.dayOfWeek == RoutineSetting.daily) &&
