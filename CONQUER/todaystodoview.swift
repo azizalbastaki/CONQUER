@@ -27,6 +27,8 @@ struct todaystodoview: View {
     @State var taskTag = ""
     @State var timeSelected = Date.now
     
+    @FocusState var receivingInput: Bool
+    
     
     var body: some View {
         NavigationStack {
@@ -46,17 +48,22 @@ struct todaystodoview: View {
                             Form {
                                 Section("Task Name") {
                                     TextField("Keep it brief!", text: self.$taskTitle)
+                                        .focused($receivingInput)
                                 }
                                 
                                 Section("Task Description") {
                                     TextField("What are the long term goals that you are hoping to achieve with this task?", text: self.$taskDescription, axis: .vertical)
                                         .lineLimit(2...)
+                                        .focused($receivingInput)
+
                                     
                                 }
                                 
                                 Section("Duration of Task (in minutes)") {
                                     TextField("In minutes, how long will this task take?", value: self.$taskDuration, formatter: NumberFormatter())
                                         .keyboardType(.numberPad)
+                                        .focused($receivingInput)
+
                                 }
                                 
                                 Section("Date of Task") {
@@ -73,6 +80,8 @@ struct todaystodoview: View {
                                 Section("Tagging") {
                                     TextField("Give this task a label", text: $taskTag)
                                         .frame(alignment: .center)
+                                        .focused($receivingInput)
+
                                 }
                                 
                                 Section("Sub Instructions - break the task down") {
@@ -83,7 +92,8 @@ struct todaystodoview: View {
                                         .onDelete(perform: deleteSubtask)
                                         HStack {
                                             TextField("Keep it small and concise", text: $newInstruction)
-                                            
+                                                .focused($receivingInput)
+
                                             Button(action: {
                                                 self.subtasks.append(SubTask(taskText: self.newInstruction))
                                                 self.newInstruction = ""
@@ -123,11 +133,15 @@ struct todaystodoview: View {
                                     
                                 })
                             }
+                            .onTapGesture {
+                                receivingInput = false
+                            }
                         } label: {
                             Text("+")
                                 .padding(.trailing)
                                 .font(.system(size: 25))
                         }
+                        
                     }
                 }
                 .padding(.horizontal)
